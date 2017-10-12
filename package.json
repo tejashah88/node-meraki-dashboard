@@ -1,0 +1,27 @@
+{
+  "name": "node-meraki-dashboard",
+  "version": "0.0.1",
+  "description": "A node.js client library for using the Meraki Dashboard API.",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap ./test",
+    "coverage": "tap ./test -- --cov --coverage-report=lcov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tejashah88/node-meraki-dashboard.git"
+  },
+  "author": "tejashah88",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tejashah88/node-meraki-dashboard/issues"
+  },
+  "homepage": "https://github.com/tejashah88/node-meraki-dashboard#readme",
+  "dependencies": {
+    "axios": "^0.16.2"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.0",
+    "tap": "^10.7.2"
+  }
+}
