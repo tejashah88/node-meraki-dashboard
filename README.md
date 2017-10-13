@@ -1,8 +1,12 @@
 # node-meraki-dashboard
 A node.js client library for using the Meraki Dashboard API.
 
-### Info
+Note: This library is untested, and there won't be any plans to add unit/integration testing anytime soon. If there are any bugs/issues, please make a new issue [here](https://github.com/tejashah88/node-meraki-dashboard/issues).
+
+### Documentation/Usage
 * Official Documentation: https://dashboard.meraki.com/api_docs
+
+Structure of
 
 ## Example
 ### Using Promises (normal functions)
@@ -39,9 +43,5 @@ var dashboard = require('node-meraki-dashboard')(key)
 })();
 ```
 
-## Todo
-* Add test files via tap
-* Add code coverage via coveralls.io
-* Add continuous integration via travis-ci
-  * Include config file for travis
+## TODO
 * Add actual documentation to README / source code
