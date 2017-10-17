@@ -18,46 +18,29 @@ function MerakiDashboard(apiKey) {
       baseURL: 'https://dashboard.meraki.com/api/v0/',
       headers: {
         'X-Cisco-Meraki-API-Key': apiKey,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         'Accept': 'application/json'
       }
     }),
     get: function(url, parameters) {
       return this.client.get(url, { params: parameters !== undefined ? parameters : {} })
-        .then(response => response.data)
-        .catch(response => Promise.reject(response.response));
+          .then(response => response.data)
+          .catch(response => Promise.reject(response.response));
     },
     post: function(url, parameters) {
       return this.client.post(url, parameters !== undefined ? parameters : {})
-        .then(response => response.data)
-        .catch(response => Promise.reject(response.response));
+          .then(response => response.data)
+          .catch(response => Promise.reject(response.response));
     },
     put: function(url, parameters) {
       return this.client.put(url, parameters !== undefined ? parameters : {})
-        .then(response => response.data)
-        .catch(response => Promise.reject(response.response));
+          .then(response => response.data)
+          .catch(response => Promise.reject(response.response));
     },
     delete: function(url) {
-      return this.client.delete(url)
-        .then(response => response.data)
-        .catch(response => Promise.reject(response.response));
-    },
-  };
-
-  dashboard.main = {
-    consumeKey: (apiKey) => {
-      if (typeof apiKey !== 'string' || apiKey.length === 0) {
-        throw new Error(ERRORS.INVALID_API_KEY);
-      }
-
-      rest.client = axios.create({
-        baseURL: 'https://dashboard.meraki.com/api/v0/',
-        headers: {
-          'X-Cisco-Meraki-API-Key': apiKey,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      })
+      this.client.delete(url)
+          .then(response => response.data)
+          .catch(response => Promise.reject(response.response));
     }
   };
 
@@ -69,7 +52,7 @@ function MerakiDashboard(apiKey) {
   };
 
   dashboard.clients = {
-    list: (serial, timespan, params) => rest.get(`/devices/${serial}/clients`, params),
+    list: (serial, params) => rest.get(`/devices/${serial}/clients`, params),
     getPolicy: (network_id, client_mac, params) => rest.get(`/networks/${network_id}/clients/${client_mac}/policy`, params),
     updatePolicy: (network_id, client_mac, params) => rest.put(`/networks/${network_id}/clients/${client_mac}/policy`, params),
     getSplashAuth: (network_id, client_mac) => rest.get(`/networks/${network_id}/clients/${client_mac}/splashAuthorizationStatus`),
