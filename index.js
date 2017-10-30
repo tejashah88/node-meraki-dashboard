@@ -115,8 +115,8 @@ function MerakiDashboard(apiKey) {
     getInventory: (organization_id) => rest.get(`/organizations/${organization_id}/inventory`),
     getSnmpSettings: (organization_id) => rest.get(`/organizations/${organization_id}/snmp`),
     updateSnmpSettings: (organization_id, params) => rest.put(`/organizations/${organization_id}/snmp`, params),
-    getThirdPartyVpnPeers: (organization_id) => rest.get(`/organizations/${organization_id}/thirdPartyVPNPeer`),
-    updateThirdPartyVpnPeers: (organization_id, params) => rest.put(`/organizations/${organization_id}/thirdPartyVPNPeer`, params)
+    getThirdPartyVpnPeers: (organization_id) => rest.get(`/organizations/${organization_id}/thirdPartyVPNPeers`),
+    updateThirdPartyVpnPeers: (organization_id, params) => rest.put(`/organizations/${organization_id}/thirdPartyVPNPeers`, params)
   };
 
   dashboard.phone_assignments = {
