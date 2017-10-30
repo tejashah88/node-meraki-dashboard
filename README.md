@@ -107,10 +107,10 @@ Array dashboard.mx_l3_firewall.updateRules(String network_id, Object params)
 ### MR L3 Firewall
 ```javascript
 // Return the L3 firewall rules for an SSID on an MR network.
-Array dashboard.mr_l3_firewall.getRules(String network_id)
+Array dashboard.mr_l3_firewall.getRules(String network_id, Number ssid)
 
 // Update the L3 firewall rules of an SSID on an MR network.
-Array dashboard.mr_l3_firewall.updateRules(String network_id, Object params)
+Array dashboard.mr_l3_firewall.updateRules(String network_id, Number ssid, Object params)
 ```
 
 ### Group policies

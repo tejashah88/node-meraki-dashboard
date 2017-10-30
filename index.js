@@ -79,8 +79,8 @@ function MerakiDashboard(apiKey) {
   };
 
   dashboard.mr_l3_firewall = {
-    getRules: (network_id) => rest.get(`/networks/${network_id}/ssids/${ssid}/l3FirewallRules`),
-    updateRules: (network_id, params) => rest.put(`/networks/${network_id}/ssids/${ssid}/l3FirewallRules`, params),
+    getRules: (network_id, ssid) => rest.get(`/networks/${network_id}/ssids/${ssid}/l3FirewallRules`),
+    updateRules: (network_id, ssid, params) => rest.put(`/networks/${network_id}/ssids/${ssid}/l3FirewallRules`, params),
   };
 
   dashboard.group_policies = {
