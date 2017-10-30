@@ -45,10 +45,10 @@ function MerakiDashboard(apiKey) {
   };
 
   dashboard.admins = {
-    list: (org_id) => rest.get(`/organizations/${org_id}/admins`),
-    create: (org_id, params) => rest.post(`/organizations/${org_id}/admins`, params),
-    update: (org_id, admin_id, params) => rest.put(`/organizations/${org_id}/admins/${admin_id}`),
-    revoke: (org_id, admin_id) => rest.delete(`/organizations/${org_id}/admins/${admin_id}`)
+    list: (organization_id) => rest.get(`/organizations/${organization_id}/admins`),
+    create: (organization_id, params) => rest.post(`/organizations/${organization_id}/admins`, params),
+    update: (organization_id, admin_id, params) => rest.put(`/organizations/${organization_id}/admins/${admin_id}`),
+    revoke: (organization_id, admin_id) => rest.delete(`/organizations/${organization_id}/admins/${admin_id}`)
   };
 
   dashboard.clients = {
@@ -60,8 +60,8 @@ function MerakiDashboard(apiKey) {
   };
 
   dashboard.config_templates = {
-    list: (org_id) => rest.get(`/organizations/${organization_id}/configTemplates`),
-    remove: (org_id, template_id) => rest.delete(`/organizations/${organization_id}/configTemplates/${template_id}`)
+    list: (organization_id) => rest.get(`/organizations/${organization_id}/configTemplates`),
+    remove: (organization_id, template_id) => rest.delete(`/organizations/${organization_id}/configTemplates/${template_id}`)
   };
 
   dashboard.devices = {
