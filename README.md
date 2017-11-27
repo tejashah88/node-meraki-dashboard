@@ -26,6 +26,7 @@ A node.js client library for using the Meraki Dashboard API.
     * [Using Promises (normal functions)](#using-promises-normal-functions)
     * [Using Promises (arrow functions)](#using-promises-arrow-functions)
     * [Using Async/Await](#using-asyncawait)
+* [TODO](#todo)
 
 ## Documentation
 Official Documentation: https://dashboard.meraki.com/api_docs
@@ -378,3 +379,6 @@ var dashboard = require('node-meraki-dashboard')(apiKey)
   }
 })();
 ```
+
+## TODO
+* add unit testing
