@@ -4,7 +4,7 @@
   "description": "A slightly opinionated node.js client library for using the Meraki Dashboard API.",
   "main": "index.js",
   "scripts": {
-    "test": "tap test/*.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -18,9 +18,5 @@
   "homepage": "https://github.com/tejashah88/node-meraki-dashboard#readme",
   "dependencies": {
     "axios": "^0.18.0"
-  },
-  "devDependencies": {
-    "tap": "^11.1.1",
-    "tapromise": "^1.1.2"
   }
 }

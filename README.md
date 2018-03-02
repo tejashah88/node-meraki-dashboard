@@ -29,9 +29,15 @@ A slightly opinionated node.js client library for using the Meraki Dashboard API
   * [Using Async/Await](#using-asyncawait)
 
 ## Major changes when upgrading to v1.0.0
-* The base url is now `api.meraki.com` from `dashboard.meraki.com` (see tejashah88/node-meraki-dashboard#2 and olalonde/follow-redirects#82)
-* Functions that took only one parameter for the `params` object are streamlined
-  * Affected functions
+* The base url is now `api.meraki.com` from `dashboard.meraki.com` (see #2)
+* Functions that took only one parameter for the `params` object are streamlined. The affected functions are as follows:
+  * dashboard.clients
+    * list
+    * getPolicy
+  * dashboard.devices
+    * list
+    * lldp_cdp_info
+  * dashboard.networks.listAirMarshalScanResults
 
 ## Documentation
 Official Documentation: https://dashboard.meraki.com/api_docs
@@ -55,7 +61,9 @@ dashboard.admins.revoke(String organization_id, String admin_id)
 
 ### Clients
 ```javascript
-// List the clients of a device, up to a maximum of a month ago. The usage of each client is returned in kilobytes. If the device is a switch, the switchport is returned; otherwise the switchport field is null. The timespan must be less than or equal to 2592000 seconds (or one month).
+// List the clients of a device, up to a maximum of a month ago. The usage of each client is returned in kilobytes.
+// If the device is a switch, the switchport is returned; otherwise the switchport field is null.
+// The timespan must be less than or equal to 2592000 seconds (or one month).
 Promise<Array> dashboard.clients.list(String serial, Number timespan)
 
 // Return the policy assigned to a client on the network. The timespan must be less than or equal to 2592000 seconds (or one month).
@@ -217,7 +225,9 @@ Promise<Object> dashboard.organizations.create(Object params)
 // Create a new organization by cloning the addressed organization.
 Promise<Object> dashboard.organizations.clone(String organization_id, Object params)
 
-// Claim a device, license key, or order into an organization. When claiming by order, all devices and licenses in the order will be claimed; licenses will be added to the organization and devices will be placed in the organization's inventory. These three types of claims are mutually exclusive and cannot be performed in one request.
+// Claim a device, license key, or order into an organization. When claiming by order, all devices and licenses in
+// that order will be claimed; licenses will be added to the organization and devices will be placed in the organization's
+// inventory. These three types of claims are mutually exclusive and cannot be performed in one request.
 dashboard.organizations.claimDevice(String organization_id, Object params)
 
 // Return the license state for an organization.
@@ -315,6 +325,59 @@ dashboard.saml_roles.delete(String organization_id, String role_id)
 ```
 
 ### SM
+
+#### Cisco Clarity
+```javascript
+// Create a new profile containing a Cisco Clarity payload.
+Promise<Object> dashboard.sm.cisco_clarity.createProfile(String network_id, Object params)
+
+// Update an existing profile containing a Cisco Clarity payload.
+Promise<Object> dashboard.sm.cisco_clarity.updateProfile(String network_id, String profile_id, Object params)
+
+// Add a Cisco Clarity payload to an existing profile.
+Promise<Object> dashboard.sm.cisco_clarity.addPayload(String network_id, String profile_id, Object params)
+
+// Get details for a Cisco Clarity payload.
+Promise<Object> dashboard.sm.cisco_clarity.getPayloadDetails(String network_id, String profile_id)
+
+// Delete a Cisco Clarity payload. Deletes the entire profile if it's empty after removing the payload.
+Promise<Object> dashboard.sm.cisco_clarity.deletePayload(String network_id, String profile_id)
+```
+
+#### Cisco Umbrella
+```javascript
+// Create a new profile containing a Cisco Umbrella payload.
+Promise<Object> dashboard.sm.cisco_umbrella.createProfile(String network_id, Object params)
+
+// Update an existing profile containing a Cisco Umbrella payload.
+Promise<Object> dashboard.sm.cisco_umbrella.updateProfile(String network_id, String profile_id, Object params)
+
+// Add a Cisco Umbrella payload to an existing profile.
+Promise<Object> dashboard.sm.cisco_umbrella.addPayload(String network_id, String profile_id, Object params)
+
+// Get details for a Cisco Umbrella payload.
+Promise<Object> dashboard.sm.cisco_umbrella.getPayloadDetails(String network_id, String profile_id)
+
+// Delete a Cisco Umbrella payload. Deletes the entire profile if it's empty after removing the payload.
+Promise<Object> dashboard.sm.cisco_umbrella.deletePayload(String network_id, String profile_id)
+```
+
+#### Cisco Polaris
+```javascript
+// Create a new Polaris app.
+Promise<Object> dashboard.sm.cisco_polaris.createApp(String network_id, Object params)
+
+// Update an existing Polaris app.
+Promise<Object> dashboard.sm.cisco_polaris.updateApp(String network_id, String app_id, Object params)
+
+// Get details for a Cisco Polaris app if it exists.
+Promise<Object> dashboard.sm.cisco_polaris.getAppDetails(String network_id, String bundle_id)
+
+// Delete a Cisco Polaris app.
+Promise<Object> dashboard.sm.cisco_polaris.deleteApp(String network_id, String app_id)
+```
+
+#### Misc. Stuff
 ```javascript
 // List the devices enrolled in an SM network with various specified fields and filters.
 Promise<Object> dashboard.sm.listDevices(String network_id)
@@ -336,6 +399,9 @@ Promise<Object> dashboard.sm.forceCheckInDevices(String network_id, Object param
 
 // Move a set of devices to a new network.
 Promise<Object> dashboard.sm.moveDevices(String network_id, Object params)
+
+// List all the profiles in the network.
+Promise<Object> dashboard.sm.listProfiles(String network_id)
 ```
 
 ### SSIDs

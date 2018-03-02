@@ -183,13 +183,34 @@ function MerakiDashboard(apiKey) {
   };
 
   dashboard.sm = {
+    cisco_clarity: {
+      createProfile: (network_id, params) => rest.post(`/networks/${network_id}/sm/profile/clarity`, params),
+      updateProfile: (network_id, profile_id, params) => rest.put(`/networks/${network_id}/sm/profile/clarity/${profile_id}`, params),
+      addPayload: (network_id, profile_id, params) => rest.post(`/networks/${network_id}/sm/profile/clarity/${profile_id}`, params),
+      getPayloadDetails: (network_id, profile_id) => rest.get(`/networks/${network_id}/sm/profile/clarity/${profile_id}`),
+      deletePayload: (network_id, profile_id) => rest.delete(`/networks/${network_id}/sm/profile/clarity/${profile_id}`)
+    },
+    cisco_umbrella: {
+      createProfile: (network_id, params) => rest.post(`/networks/${network_id}/sm/profile/umbrella`, params),
+      updateProfile: (network_id, profile_id, params) => rest.put(`/networks/${network_id}/sm/profile/umbrella/${profile_id}`, params),
+      addPayload: (network_id, profile_id, params) => rest.post(`/networks/${network_id}/sm/profile/umbrella/${profile_id}`, params),
+      getPayloadDetails: (network_id, profile_id) => rest.get(`/networks/${network_id}/sm/profile/umbrella/${profile_id}`),
+      deletePayload: (network_id, profile_id) => rest.delete(`/networks/${network_id}/sm/profile/umbrella/${profile_id}`)
+    },
+    cisco_polaris: {
+      createApp: (network_id, params) => rest.post(`/networks/${network_id}/sm/app/polaris`, params),
+      updateApp: (network_id, app_id, params) => rest.put(`/networks/${network_id}/sm/app/polaris/${app_id}`, params),
+      getAppDetails: (network_id, bundle_id) => rest.get(`/networks/${network_id}/sm/app/polaris`, ensureValueVerbose(bundle_id, { bundleId: bundle_id }, {})),
+      deleteApp: (network_id, app_id) => rest.delete(`/networks/${network_id}/sm/app/polaris/${app_id}`)
+    },
     listDevices: (network_id) => rest.get(`/networks/${network_id}/sm/devices`),
     editTags: (network_id, params) => rest.put(`/networks/${network_id}/sm/devices/tags`, params),
     editFields: (network_id, params) => rest.put(`/networks/${network_id}/sm/device/fields`, params),
     lockDevices: (network_id, params) => rest.put(`/networks/${network_id}/sm/devices/lock`, params),
     wipeDevice: (network_id, params) => rest.put(`/networks/${network_id}/sm/device/wipe`, params),
     forceCheckInDevices: (network_id, params) => rest.put(`/networks/${network_id}/sm/devices/checkin`, params),
-    moveDevices: (network_id, params) => rest.put(`/networks/${network_id}/sm/devices/move`, params)
+    moveDevices: (network_id, params) => rest.put(`/networks/${network_id}/sm/devices/move`, params),
+    listProfiles: (network_id) => rest.get(`/networks/${network_id}/sm/profiles`)
   };
 
   dashboard.ssids = {
@@ -224,5 +245,3 @@ function MerakiDashboard(apiKey) {
 }
 
 module.exports = MerakiDashboard;
-
-console.log(MerakiDashboard("test"))
