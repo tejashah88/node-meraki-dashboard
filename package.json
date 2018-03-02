@@ -1,10 +1,10 @@
 {
   "name": "node-meraki-dashboard",
   "version": "0.0.6",
-  "description": "A node.js client library for using the Meraki Dashboard API.",
+  "description": "A slightly opinionated node.js client library for using the Meraki Dashboard API.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tap test/*.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/tejashah88/node-meraki-dashboard#readme",
   "dependencies": {
-    "axios": "^0.16.2"
+    "axios": "^0.18.0"
+  },
+  "devDependencies": {
+    "tap": "^11.1.1",
+    "tapromise": "^1.1.2"
   }
 }
