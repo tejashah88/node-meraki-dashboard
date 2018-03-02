@@ -245,5 +245,3 @@ function MerakiDashboard(apiKey) {
 }
 
 module.exports = MerakiDashboard;
-
-console.log(MerakiDashboard("teset"))
