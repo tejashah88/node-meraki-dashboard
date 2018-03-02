@@ -1,16 +1,19 @@
 # node-meraki-dashboard
 A slightly opinionated node.js client library for using the Meraki Dashboard API.
 
-## Table Of Contents
-
+## Table of Contents
+* [Major changes when upgrading to v1.0.0](#major-changes-when-upgrading-to-v100)
 * [Documentation](#documentation)
   * [Admins](#admins)
   * [Clients](#clients)
   * [Config templates](#config-templates)
   * [Devices](#devices)
   * [Group policies](#group-policies)
-  * [MX L3 Firewall](#mx-l3-firewall)
+  * [Hotspot 2.0 (Only applies to the Meraki DevNet Sandbox)](#hotspot-20-only-applies-to-the-meraki-devnet-sandbox)
   * [MR L3 Firewall](#mr-l3-firewall)
+  * [MX L3 Firewall](#mx-l3-firewall)
+  * [MX VPN Firewall](#mx-vpn-firewall)
+  * [MX Cellular Firewall](#mx-cellular-firewall)
   * [Networks](#networks)
   * [Organizations](#organizations)
   * [Phone assignments](#phone-assignments)
@@ -19,6 +22,10 @@ A slightly opinionated node.js client library for using the Meraki Dashboard API
   * [Phone numbers](#phone-numbers)
   * [SAML roles](#saml-roles)
   * [SM](#sm)
+    * [Cisco Clarity](#cisco-clarity)
+    * [Cisco Umbrella](#cisco-umbrella)
+    * [Cisco Polaris](#cisco-polaris)
+    * [Misc. Functions](#misc-functions)
   * [SSIDs](#ssids)
   * [Static routes](#static-routes)
   * [Switch ports](#switch-ports)
@@ -37,10 +44,11 @@ A slightly opinionated node.js client library for using the Meraki Dashboard API
   * dashboard.devices
     * list
     * lldp_cdp_info
-  * dashboard.networks.listAirMarshalScanResults
+  * dashboard.networks
+    * listAirMarshalScanResults
 
 ## Documentation
-Official Documentation: https://dashboard.meraki.com/api_docs
+Official Documentation: https://api.meraki.com/api_docs
 
 All functions return a promise, which either resolves to the data received, or rejects with an error.
 
@@ -377,7 +385,7 @@ Promise<Object> dashboard.sm.cisco_polaris.getAppDetails(String network_id, Stri
 Promise<Object> dashboard.sm.cisco_polaris.deleteApp(String network_id, String app_id)
 ```
 
-#### Misc. Stuff
+#### Misc. Functions
 ```javascript
 // List the devices enrolled in an SM network with various specified fields and filters.
 Promise<Object> dashboard.sm.listDevices(String network_id)
