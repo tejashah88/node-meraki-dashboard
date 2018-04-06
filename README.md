@@ -45,7 +45,6 @@ A slightly opinionated node.js client library for using the Meraki Dashboard API
     * list
     * getPolicy
   * dashboard.devices
-    * list
     * lldp_cdp_info
   * dashboard.networks
     * listAirMarshalScanResults
@@ -102,7 +101,7 @@ dashboard.config_templates.remove(String organization_id, String template_id)
 ### Devices
 ```javascript
 // List the devices in a network.
-Promise<Array> dashboard.devices.list(String network_id, Number timespan)
+Promise<Array> dashboard.devices.list(String network_id)
 
 // Return a single device.
 Promise<Object> dashboard.devices.get(String network_id, String serial)
