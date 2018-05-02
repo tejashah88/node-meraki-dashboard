@@ -1,8 +1,8 @@
-'use strict';
-const axios = require('axios');
+"use strict";
+const axios = require("axios");
 
 const ERRORS = {
-  INVALID_API_KEY: 'Invalid API Key specified!'
+  INVALID_API_KEY: "Invalid API Key specified!"
 };
 
 let isDefined = value => typeof value !== "undefined";
@@ -10,7 +10,7 @@ let ensureValueVerbose = (testValue, truthyValue, falseyValue) => isDefined(test
 let ensureValue = (value, defaultVal) => ensureValueVerbose(value, value, defaultVal);
 
 function MerakiDashboard(apiKey) {
-  if (typeof apiKey !== 'string' || apiKey.length === 0)
+  if (typeof apiKey !== "string" || apiKey.length === 0)
     throw new Error(ERRORS.INVALID_API_KEY);
 
   let dashboard = {};
@@ -23,11 +23,11 @@ function MerakiDashboard(apiKey) {
 
   let rest = {
     client: axios.create({
-      baseURL: 'https://api.meraki.com/api/v0/',
+      baseURL: "https://api.meraki.com/api/v0/",
       headers: {
-        'X-Cisco-Meraki-API-Key': apiKey,
-        'Content-Type': 'application/json; charset=utf-8',
-        'Accept': 'application/json'
+        "X-Cisco-Meraki-API-Key": apiKey,
+        "Content-Type": "application/json; charset=utf-8",
+        "Accept": "application/json"
       }
     }),
     get: function(url, parameters) {
@@ -59,7 +59,7 @@ function MerakiDashboard(apiKey) {
   dashboard.admins = {
     list: (organization_id) => rest.get(`/organizations/${organization_id}/admins`),
     create: (organization_id, params) => rest.post(`/organizations/${organization_id}/admins`, params),
-    update: (organization_id, admin_id, params) => rest.put(`/organizations/${organization_id}/admins/${admin_id}`),
+    update: (organization_id, admin_id, params) => rest.put(`/organizations/${organization_id}/admins/${admin_id}`, params),
     revoke: (organization_id, admin_id) => rest.delete(`/organizations/${organization_id}/admins/${admin_id}`)
   };
 
@@ -93,7 +93,7 @@ function MerakiDashboard(apiKey) {
   dashboard.hotspot_v2 = {
     getSettings: (network_id, ssid) => rest.get(`/networks/${network_id}/ssids/${ssid}/hotspot20`),
     updateSettings: (network_id, ssid, params) => rest.put(`/networks/${network_id}/ssids/${ssid}/hotspot20`, params),
-  }
+  };
 
   dashboard.mr_l3_firewall = {
     getRules: (network_id, ssid) => rest.get(`/networks/${network_id}/ssids/${ssid}/l3FirewallRules`),
@@ -113,7 +113,7 @@ function MerakiDashboard(apiKey) {
   dashboard.mx_cellular_firewall = {
     getRules: (network_id) => rest.get(`/networks/${network_id}/cellularFirewallRules`),
     updateRules: (network_id, params) => rest.put(`/networks/${network_id}/cellularFirewallRules`, params),
-  }
+  };
 
   dashboard.networks = {
     list: (organization_id) => rest.get(`/organizations/${organization_id}/networks`),
@@ -133,14 +133,15 @@ function MerakiDashboard(apiKey) {
   };
 
   dashboard.organizations = {
-    list: () => rest.get('/organizations'),
+    list: () => rest.get("/organizations"),
     get: (organization_id) => rest.get(`/organizations/${organization_id}`),
     update: (organization_id, params) => rest.put(`/organizations/${organization_id}`, params),
-    create: (params) => rest.post('/organizations', params),
+    create: (params) => rest.post("/organizations", params),
     clone: (organization_id, params) => rest.post(`/organizations/${organization_id}/clone`, params),
     claimDevice: (organization_id, params) => rest.post(`/organizations/${organization_id}/claim`, params),
     getLicenseState: (organization_id) => rest.get(`/organizations/${organization_id}/licenseState`),
     getInventory: (organization_id) => rest.get(`/organizations/${organization_id}/inventory`),
+    getDeviceStatuses: (organization_id) => rest.get(`/organizations/${organization_id}/deviceStatuses`),
     getSnmpSettings: (organization_id) => rest.get(`/organizations/${organization_id}/snmp`),
     updateSnmpSettings: (organization_id, params) => rest.put(`/organizations/${organization_id}/snmp`, params),
     getThirdPartyVpnPeers: (organization_id) => rest.get(`/organizations/${organization_id}/thirdPartyVPNPeers`),
@@ -160,7 +161,7 @@ function MerakiDashboard(apiKey) {
     create: (network_id, params) => rest.post(`/networks/${network_id}/phoneCallgroups`, params),
     update: (network_id, call_group_id, params) => rest.put(`/networks/${network_id}/phoneCallgroups/${call_group_id}`, params),
     delete: (network_id, call_group_id) => rest.delete(`/networks/${network_id}/phoneCallgroups/${call_group_id}`)
-  }
+  };
 
   dashboard.phone_contacts = {
     list: (network_id) => rest.get(`/networks/${network_id}/phoneContacts`),
