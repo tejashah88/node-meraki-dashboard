@@ -21,6 +21,7 @@ A slightly opinionated node.js client library for using the Meraki Dashboard API
   * [Organizations](#organizations)
   * [Phone assignments](#phone-assignments)
   * [Phone callgroups](#phone-callgroups)
+  * [Phone conference rooms](#phone-conference-rooms)
   * [Phone contacts](#phone-contacts)
   * [Phone numbers](#phone-numbers)
   * [SAML roles](#saml-roles)
@@ -293,6 +294,24 @@ Object dashboard.phone_callgroups.update(String network_id, String call_group_id
 
 // Delete a call group.
 dashboard.phone_callgroups.delete(String network_id, String call_group_id)
+```
+
+### Phone conference rooms
+```javascript
+// List all the phone conference rooms in a network.
+Array dashboard.phone_comference_rooms.list(String network_id)
+
+// Show a conference room's details.
+Object dashboard.phone_comference_rooms.get(String network_id, String room_id)
+
+// Add a conference room.
+Object dashboard.phone_comference_rooms.create(String network_id, Object params)
+
+// Update a conference room's. Only submit parameters you would like to update. Omitting any parameters will leave them as-is.
+Object dashboard.phone_comference_rooms.update(String network_id, String room_id, Object params)
+
+// Delete a conference room.
+dashboard.phone_comference_rooms.delete(String network_id, String room_id)
 ```
 
 ### Phone contacts

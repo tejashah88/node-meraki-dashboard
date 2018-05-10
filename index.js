@@ -163,6 +163,14 @@ function MerakiDashboard(apiKey) {
     delete: (network_id, call_group_id) => rest.delete(`/networks/${network_id}/phoneCallgroups/${call_group_id}`)
   };
 
+  dashboard.phone_comference_rooms = {
+    list: (network_id) => rest.get(`/networks/${network_id}/phoneConferenceRooms`),
+    get: (network_id, room_id) => rest.get(`/networks/${network_id}/phoneConferenceRooms/${room_id}`),
+    create: (network_id, params) => rest.post(`/networks/${network_id}/phoneConferenceRooms`, params),
+    update: (network_id, room_id, params) => rest.put(`/networks/${network_id}/phoneConferenceRooms/${room_id}`, params),
+    delete: (network_id, room_id) => rest.delete(`/networks/${network_id}/phoneConferenceRooms/${room_id}`)
+  };
+
   dashboard.phone_contacts = {
     list: (network_id) => rest.get(`/networks/${network_id}/phoneContacts`),
     add: (network_id, name) => rest.post(`/networks/${network_id}/phoneContacts`, ensureValueVerbose(name, { name }, {})),
