@@ -1,5 +1,4 @@
 ## Table of Contents
-* [Major changes when upgrading to v1.0.0](#major-changes-when-upgrading-to-v100)
 * [Documentation](#documentation)
   * [Admins](#admins)
   * [Bluetooth Clients](#bluetooth-clients)
@@ -36,10 +35,10 @@
   * [Using Async/Await](#using-asyncawait)
 
 ## Documentation
-Official Documentation: https://api.meraki.com/api_docs
-Postman Documentation (usually more up to date): https://documenter.getpostman.com/view/897512/2To9xm
+* Official Documentation: https://api.meraki.com/api_docs
+* Postman Documentation (usually more up to date): https://documenter.getpostman.com/view/897512/2To9xm
 
-All functions return a promise, which either resolves to the data received, or rejects with an error.
+##### All functions return a promise, which either resolves to the data received, or rejects with an error.
 
 ### Admins
 ```javascript
