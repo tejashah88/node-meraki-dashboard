@@ -34,7 +34,7 @@
 * `deleteRequest` - Delete a restrict processing PII request.
 
 ### Bug fixes
-* Fixed a bug where org IDs longer than 16 digits would have their trailing digits be set to zero upon being parsed to JSON. This was due to how javascript handles integers larger than 2<sup>53</sup> - 1.
+* Fixed a bug where org IDs longer than 16 digits would have their trailing digits be set to zero upon being parsed to JSON. This was due to how javascript handles integers larger than 2<sup>53</sup> - 1. This fixes issue [#4](https://github.com/tejashah88/node-meraki-dashboard/issues/4).
 
 ## v1.1.0
 
