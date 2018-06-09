@@ -1,9 +1,8 @@
 "use strict";
-const axios = require("axios");
 
-const ERRORS = {
-  INVALID_API_KEY: "Invalid API Key specified!"
-};
+const axios = require("axios");
+const JSONbig = require("json-bigint");
+const ERRORS = { INVALID_API_KEY: "Invalid API Key specified!" };
 
 let isDefined = value => typeof value !== "undefined";
 let ensureValueVerbose = (testValue, truthyValue, falseyValue) => isDefined(testValue) ? truthyValue : falseyValue;
@@ -28,7 +27,8 @@ function MerakiDashboard(apiKey) {
         "X-Cisco-Meraki-API-Key": apiKey,
         "Content-Type": "application/json; charset=utf-8",
         "Accept": "application/json"
-      }
+      },
+      transformResponse: [ JSONbig.parse ]
     }),
     get: function(url, parameters) {
       return this.client
@@ -63,12 +63,22 @@ function MerakiDashboard(apiKey) {
     revoke: (organization_id, admin_id) => rest.delete(`/organizations/${organization_id}/admins/${admin_id}`)
   };
 
+  dashboard.bluetooth_clients = {
+    list: (network_id, params) => rest.get(`/networks/${network_id}/bluetoothClients`, params),
+    get: (network_id, client_mac, params) => rest.get(`/networks/${network_id}/bluetoothClients/${client_mac}`, params)
+  };
+
   dashboard.clients = {
     list: (serial, timespan) => rest.get(`/devices/${serial}/clients`, ensureValueVerbose(timespan, { timespan }, {})),
     getPolicy: (network_id, client_mac, timespan) => rest.get(`/networks/${network_id}/clients/${client_mac}/policy`, ensureValueVerbose(timespan, { timespan }, {})),
     updatePolicy: (network_id, client_mac, params) => rest.put(`/networks/${network_id}/clients/${client_mac}/policy`, params),
     getSplashAuth: (network_id, client_mac) => rest.get(`/networks/${network_id}/clients/${client_mac}/splashAuthorizationStatus`),
-    updateSplashAuth: (network_id, client_mac, params) => rest.put(`/networks/${network_id}/clients/${client_mac}/splashAuthorizationStatus`, params)
+    updateSplashAuth: (network_id, client_mac, params) => rest.put(`/networks/${network_id}/clients/${client_mac}/splashAuthorizationStatus`, params),
+    get: (network_id, client_mac) => rest.get(`/networks/${network_id}/clients/${client_mac}`),
+    usageHistory: (network_id, client_mac) => rest.get(`/networks/${network_id}/clients/${client_mac}/usageHistory`),
+    trafficHistory: (network_id, client_mac, params) => rest.get(`/networks/${network_id}/clients/${client_mac}/trafficHistory`, params),
+    events: (network_id, client_mac, params) => rest.get(`/networks/${network_id}/clients/${client_mac}events`, params),
+    securityEvents: (network_id, client_mac, params) => rest.get(`/networks/${network_id}/clients/${client_mac}`, params),
   };
 
   dashboard.config_templates = {
@@ -88,6 +98,11 @@ function MerakiDashboard(apiKey) {
 
   dashboard.group_policies = {
     list: (network_id) => rest.get(`/networks/${network_id}/groupPolicies`)
+  };
+
+  dashboard.meraki_auth = {
+    listUsers: (network_id) => rest.get(`/networks/${network_id}/merakiAuthUsers`),
+    getUser: (network_id, user_id) => rest.get(`/networks/${network_id}/merakiAuthUsers/${user_id}`)
   };
 
   dashboard.hotspot_v2 = {
@@ -181,6 +196,27 @@ function MerakiDashboard(apiKey) {
   dashboard.phone_numbers = {
     listAll: (network_id) => rest.get(`/networks/${network_id}/phoneNumbers`),
     listAvailable: (network_id) => rest.get(`/networks/${network_id}/phoneNumbers/available`)
+  };
+
+  dashboard.pii = {
+    organizations: {
+      list: (organization_id, params) => rest.get(`/organizations/${organization_id}/pii/piiKeys`, params),
+      getDeviceId: (organization_id, params) => rest.get(`/organizations/${organization_id}/pii/smDevicesForKey`, params),
+      listSMOwners: (organization_id, params) => rest.get(`/organizations/${organization_id}/pii/smOwnersForKey`, params),
+      listRequests: (organization_id) => rest.get(`/organizations/${organization_id}/pii/requests`),
+      getRequest: (organization_id, request_id) => rest.get(`/organizations/${organization_id}/pii/requests/${request_id}`),
+      submitRequest: (organization_id, params) => rest.post(`/organizations/${organization_id}/pii/requests`, params),
+      deleteRequest: (organization_id, request_id) => rest.delete(`/organizations/${organization_id}/pii/requests/${request_id}`),
+    },
+    networks: {
+      list: (network_id, params) => rest.get(`/networks/${network_id}/pii/piiKeys`, params),
+      getDeviceId: (network_id, params) => rest.get(`/networks/${network_id}/pii/smDevicesForKey`, params),
+      listSMOwners: (network_id, params) => rest.get(`/networks/${network_id}/pii/smOwnersForKey`, params),
+      listRequests: (network_id) => rest.get(`/networks/${network_id}/pii/requests`),
+      getRequest: (network_id, request_id) => rest.get(`/networks/${network_id}/pii/requests/${request_id}`),
+      submitRequest: (network_id, params) => rest.post(`/networks/${network_id}/pii/requests`, params),
+      deleteRequest: (network_id, request_id) => rest.delete(`/networks/${network_id}/pii/requests/${request_id}`),
+    }
   };
 
   dashboard.saml_roles = {
