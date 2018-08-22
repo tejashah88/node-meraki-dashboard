@@ -54,7 +54,7 @@
 * `dashboard.organizations.getDeviceStatuses` - Get device statuses from an org
 
 ### Bug Fixes
-* Fixed not being able to actually update an admin's attributes
+* Fixed not being able to update an admin's attributes.
 
 ## v1.0.0
 
