@@ -2,7 +2,7 @@
 
 ![NPM Version](https://img.shields.io/npm/v/node-meraki-dashboard.svg)
 
-A slightly opinionated node.js client library for using the Meraki Dashboard API.
+A node.js client library for using the Meraki Dashboard API.
 
 ## Documentation
 * [Official Documentation](https://api.meraki.com/api_docs)
