@@ -39,10 +39,13 @@
     "chai-as-promised": "^7.1.1",
     "chai-things": "^0.2.0",
     "chalk": "^2.4.1",
+    "coveralls": "^3.0.2",
     "eslint": "^5.10.0",
     "json-from-text": "^1.1.0",
     "minimist": "^1.2.0",
     "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "object.values": "^1.0.4",
     "string.prototype.matchall": "^3.0.1",
     "table": "^5.1.1",
     "unique-objects": "^1.0.3"

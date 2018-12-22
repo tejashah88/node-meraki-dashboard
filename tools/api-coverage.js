@@ -6,13 +6,15 @@ const uniqueObjects = require('unique-objects');
 const { table } = require('table');
 const chalk = require('chalk');
 
+const values = require('object.values');
+
 const blacklistedEndpointsPath = __dirname + '/postman-endpoint-blacklist.json';
 
 const { retrieveOfficialDocs, retrievePostmanDocs } = require('../utils/retrieve-api-routes');
 const getImplementedPaths = require('../utils/code-analyzer');
 
 const flatten = arr => [].concat(...arr);
-const getAllEndpoints = docs => flatten(Object.values(docs));
+const getAllEndpoints = docs => flatten(values(docs));
 const stringifyEndpoint = endpoint => `${endpoint.method} - ${endpoint.path}`;
 
 const implEndpoints = getImplementedPaths('./src/index.js')
@@ -26,7 +28,7 @@ const argv = require('minimist')(process.argv.slice(2), { boolean: true });
 Promise.all([
   retrievePostmanDocs().then(getAllEndpoints),
   retrieveOfficialDocs().then(getAllEndpoints)
-]).then(arrays => [].concat(...arrays))
+]).then(arrays => flatten(arrays))
   .then(combined => uniqueObjects(combined, ['method', 'path']))
   .then(allEndpoints => {
     let endpointData = allEndpoints.filter(

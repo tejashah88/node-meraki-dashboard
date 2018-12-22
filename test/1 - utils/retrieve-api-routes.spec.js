@@ -5,6 +5,8 @@ chai.use(require('chai-things'));
 chai.use(require('chai-as-promised'));
 const expect = chai.expect;
 
+const values = require('object.values');
+
 const { retrieveOfficialDocs, retrievePostmanDocs } = require('../../utils/retrieve-api-routes');
 
 describe('utils/retrieve-api-routes.js', function () {
@@ -33,7 +35,7 @@ describe('utils/retrieve-api-routes.js', function () {
 
     before('retrieving API endpoint resources', function () {
       const flatten = arr => [].concat(...arr);
-      const getAllEndpoints = docs => flatten(Object.values(docs));
+      const getAllEndpoints = docs => flatten(values(docs));
       this.pOfficialEndpoints = retrieveOfficialDocs().then(getAllEndpoints);
       this.pPostmanEndpoints = retrievePostmanDocs().then(getAllEndpoints);
     });

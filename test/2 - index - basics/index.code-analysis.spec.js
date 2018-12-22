@@ -6,6 +6,8 @@ const expect = require('chai').expect;
 const getImplementedPaths = require('../../utils/code-analyzer');
 const DEFINED_API_METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
 
+const unique = arr => [...new Set(arr)];
+
 describe('code structure analysis tests', function () {
   before(function () {
     this.apiPaths = getImplementedPaths('./src/index.js');
@@ -13,7 +15,7 @@ describe('code structure analysis tests', function () {
 
   it('should have valid REST methods implemented', function () {
     const invalidPaths = this.apiPaths.filter(endpoint => !DEFINED_API_METHODS.includes(endpoint.method));
-    const invalidMethods = [...new Set(invalidPaths.map(endpoint => endpoint.method))];
+    const invalidMethods = unique(invalidPaths.map(endpoint => endpoint.method));
     expect(invalidPaths).to.be.length(0, `Invalid REST methods detected: [ ${invalidMethods.join(', ')} ]`);
   });
 
