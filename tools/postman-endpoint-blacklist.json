@@ -1,0 +1,42 @@
+[
+  {
+    "method": "GET",
+    "path": "/devices/<param>/cameras/video_link"
+  },
+  {
+    "method": "GET",
+    "path": "/networks/<param>/firewalledServices/icmp"
+  },
+  {
+    "method": "PUT",
+    "path": "/networks/<param>/firewalledServices/icmp"
+  },
+  {
+    "method": "GET",
+    "path": "/networks/<param>/firewalledServices/snmp"
+  },
+  {
+    "method": "PUT",
+    "path": "/networks/<param>/firewalledServices/snmp"
+  },
+  {
+    "method": "GET",
+    "path": "/networks/<param>/firewalledServices/web"
+  },
+  {
+    "method": "PUT",
+    "path": "/networks/<param>/firewalledServices/web"
+  },
+  {
+    "method": "PUT",
+    "path": "/networks/<param>/ssids/<param>/l3FirewallRules/<param>"
+  },
+  {
+    "method": "PUT",
+    "path": "/networks/<param>/l3FirewallRules/<param>"
+  },
+  {
+    "method": "POST",
+    "path": "/networks/<param>/phoneCallgroups/<param>"
+  }
+]

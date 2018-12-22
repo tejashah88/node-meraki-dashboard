@@ -1,68 +1,89 @@
 # Changelog
 
-## v1.2.0
+## v2.0.0 - (Dec/22/2018)
+
+### :warning: Breaking Changes :warning:
+
+#### Upgrading to v2.0.0
+
+#### Removed endpoints - [@tejashah88](https://github.com/tejashah88)
+* Hotspot 2.0 - It seems to have been removed without any explicit warning
+
+#### Changed Endpoints - [@tejashah88](https://github.com/tejashah88)
+* `dashboard.devices.lldp_cdp_info` => `dashboard.devices.lldpCdpInfo`
+
+### New features
+
+* Added ability to make custom REST calls in light of the rapidly evolving API and the new API endpoints - [@tejashah88](https://github.com/tejashah88)
 
 ### New API Endpoints
+* Added approximately 60 new endpoints - [@tejashah88](https://github.com/tejashah88)
 
-#### Clients - `dashboard.clients`
+#### New groups added - [@tejashah88](https://github.com/tejashah88)
+* Alert Settings - `dashboard.alert_settings`
+* Analytics - `dashboard.analytics`
+* Cameras - `dashboard.cameras`
+* HTTP Servers - `dashboard.http_servers`
+* Wireless Health - `dashboard.wireless_health`
+* Splash Page - `dashboard.splash_page`
+* Named tag scope - `dashboard.named_tag_scope`
+* Syslog servers - `dashboard.syslog_servers`
+* Phone announcements - `dashboard.phone_announcements`
+* Firewalled services - `dashboard.firewalled_services`
 
-* `get` - Retrieve a client either by client ID, MAC or IP address.
-* `usageHistory` - Retrieve the client's daily usage history. Usage data is in kilobytes.
-* `trafficHistory` - Retrieve the client's network traffic data over time. Usage data is in kilobytes.
-* `events` - Retrieve a client's events.
-* `securityEvents` - Retrieve a client's security events.
-
-#### Bluetooth Clients - `dashboard.bluetooth_clients`
-
-* `list` - List the Bluetooth clients seen by APs in this network.
-* `get` - Retrieve a Bluetooth client.
-
-#### Meraki Auth - `dashboard.meraki_auth`
-
-* `list` - List the splash or RADIUS users configured under Meraki Authentication for a network.
-* `get` - Retrieve the specified splash or RADIUS user.
-
-#### Personal Identifying Information - dashboard.pii[organizations/networks]
-##### Applies for both organizations and networks.
-
-* `list` - List the keys required to access PII for a given identifier.
-* `getDeviceId` - Given a piece of PII, retrieve the Systems Manager device ID(s) associated with that identifier.
-* `listSMOwners` - Given a piece of PII, retrieve the Systems Manager owner ID(s) associated with that identifier.
-* `listRequests` - List the PII requests for an organization/network.
-* `getRequest` - Return a PII request for an organization/network.
-* `submitRequest` - Submit a new delete or restrict processing PII request.
-* `deleteRequest` - Delete a restrict processing PII request.
+#### New endpoints in existing groups - [@tejashah88](https://github.com/tejashah88)
+* Clients - `dashboard.clients`
+* SM - `dashboard.sm`
+* VLANs - `dashboard.vlans`
+* Devices - `dashboard.devices`
 
 ### Bug fixes
-* Fixed a bug where org IDs longer than 16 digits would have their trailing digits be set to zero upon being parsed to JSON. This was due to how javascript handles integers larger than 2<sup>53</sup> - 1. This fixes issue [#4](https://github.com/tejashah88/node-meraki-dashboard/issues/4).
+* Fixed not being able to retrieve the events from a client - [@tejashah88](https://github.com/tejashah88)
+* Fixed not being able to retrieve the security events endpoint - [@tejashah88](https://github.com/tejashah88)
+* Fixed not being able to pass parameters for binding a network to a template - [@tejashah88](https://github.com/tejashah88)
 
-## v1.1.0
+### Miscellaneous
+* Added unit testing of source and utility functions as well as an experimental API coverage tool (see the announcement in the [README](README.md) for more details) - [@tejashah88](https://github.com/tejashah88)
+
+## v1.2.0 - (June/8/2018)
 
 ### New API Endpoints
+#### New groups added - [@tejashah88](https://github.com/tejashah88)
+* Bluetooth Clients - `dashboard.bluetooth_clients`
+* Meraki Auth - `dashboard.meraki_auth`
+* Personal Identifying Information - `dashboard.pii[organizations/networks]`
+  * Applies for both organizations and networks
 
-#### Phone conference rooms - `dashboard.phone_comference_rooms`
+#### New endpoints in existing groups
+* Clients - `dashboard.clients` - [@tejashah88](https://github.com/tejashah88)
 
-* `list` - List all the phone conference rooms in a network.
-* `get` - Show a conference room's details.
-* `create` - Add a conference room.
-* `update` - Update a conference room. Only submit parameters you would like to update. Omitting any parameters will leave them as-is.
-* `delete` - Delete a conference room.
+### Bug fixes
+* [#4](https://github.com/tejashah88/node-meraki-dashboard/issues/4): Fixed a bug where org IDs longer than 16 digits would have their trailing digits be set to zero upon being parsed to JSON. This was due to how javascript handles integers larger than (2<sup>53</sup> - 1) - [@tejashah88](https://github.com/tejashah88)
 
-## v1.0.1
+## v1.1.0 - (May/9/2018)
 
-### New API Endpoint
-* `dashboard.organizations.getDeviceStatuses` - Get device statuses from an org
+### New API Endpoints
+#### New groups added
+* Phone conference rooms - `dashboard.phone_comference_rooms` - [@tejashah88](https://github.com/tejashah88)
+
+## v1.0.1 - (May/2/2018)
+
+### New API Endpoints
+* Added new endpoint to get device statuses from an org - `dashboard.organizations.getDeviceStatuses` - [@tejashah88](https://github.com/tejashah88)
 
 ### Bug Fixes
-* Fixed not being able to update an admin's attributes.
+* Fixed not being able to update an admin's attributes - [@tejashah88](https://github.com/tejashah88)
 
-## v1.0.0
+## v1.0.0 - (March/2/2018)
 
 ### First official release
 
+### :warning: Breaking Changes :warning:
+
 #### Upgrading to v1.0.0
-* The base url is now `api.meraki.com` from `dashboard.meraki.com` (see #2)
-* Functions that took only one parameter for the `params` object are streamlined. The affected functions are as follows:
+
+* Functions that took only one parameter for the `params` object are flattened - [@tejashah88](https://github.com/tejashah88)
+* The affected functions are as follows:
   * `dashboard.clients`
     * `list`
     * `getPolicy`
@@ -70,3 +91,7 @@
     * `lldp_cdp_info`
   * `dashboard.networks`
     * `listAirMarshalScanResults`
+
+### Bug Fixes
+
+* [#2](https://github.com/tejashah88/node-meraki-dashboard/issues/2): The base url is changed from `dashboard.meraki.com` to `api.meraki.com` - [@tejashah88](https://github.com/tejashah88)

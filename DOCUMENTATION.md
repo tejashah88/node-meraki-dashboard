@@ -1,18 +1,24 @@
 ## Table of Contents
 * [Documentation](#documentation)
   * [Admins](#admins)
+  * [Alert settings](#alert-settings)
+  * [Analytics](#analytics)
+  * [Cameras](#cameras)
   * [Bluetooth Clients](#bluetooth-clients)
   * [Clients](#clients)
   * [Config templates](#config-templates)
   * [Devices](#devices)
+  * [Firewalled services](#firewalled-services)
   * [Group policies](#group-policies)
-  * [Hotspot 2.0 (Only applies to the Meraki DevNet Sandbox)](#hotspot-20-only-applies-to-the-meraki-devnet-sandbox)
+  * [HTTP Servers](#http-servers)
   * [MR L3 Firewall](#mr-l3-firewall)
   * [MX L3 Firewall](#mx-l3-firewall)
   * [MX VPN Firewall](#mx-vpn-firewall)
   * [MX Cellular Firewall](#mx-cellular-firewall)
+  * [Named tag scope](#named-tag-scope)
   * [Networks](#networks)
   * [Organizations](#organizations)
+  * [Phone announcements](#phone-announcements)
   * [Phone assignments](#phone-assignments)
   * [Phone callgroups](#phone-callgroups)
   * [Phone conference rooms](#phone-conference-rooms)
@@ -20,25 +26,30 @@
   * [Phone numbers](#phone-numbers)
   * [Personal Identifying Information (PII)](#personal-identifying-information-pii)
   * [SAML roles](#saml-roles)
-  * [SM](#sm)
+  * [System Manager](#system-manager)
     * [Cisco Clarity](#cisco-clarity)
     * [Cisco Umbrella](#cisco-umbrella)
     * [Cisco Polaris](#cisco-polaris)
+    * [Device](#device)
     * [Misc. Functions](#misc-functions)
   * [SSIDs](#ssids)
+  * [Splash Page](#splash-page)
   * [Static routes](#static-routes)
   * [Switch ports](#switch-ports)
+  * [Syslog servers](#syslog-servers)
   * [VLANs](#vlans)
-* [Examples](#examples)
-  * [Using Promises (normal functions)](#using-promises-normal-functions)
-  * [Using Promises (arrow functions)](#using-promises-arrow-functions)
-  * [Using Async/Await](#using-asyncawait)
+  * [Wireless Health](#wireless-health)
+    * [Connectivity Info](#connectivity-info)
+    * [Latency Info](#latency-info)
+    * [Misc. Functions](#misc-functions)
+  * [Custom API calls](#custom-api-calls)
 
 ## Documentation
 * Official Documentation: https://api.meraki.com/api_docs
-* Postman Documentation (usually more up to date): https://documenter.getpostman.com/view/897512/2To9xm
+* Postman Documentation: https://documenter.getpostman.com/view/897512/2To9xm
 
 ##### All functions return a promise, which either resolves to the data received, or rejects with an error.
+##### Despite the prescence of types in the documentation, they are NOT enforced in the library. They are more useful as a guide but passing the wrong kind of data can cause unexpected behavior.
 
 ### Admins
 ```javascript
@@ -55,6 +66,33 @@ Object dashboard.admins.update(String organization_id, String admin_id, Object p
 dashboard.admins.revoke(String organization_id, String admin_id)
 ```
 
+### Alert settings
+```javascript
+// Return the alert configuration for this network.
+Object dashboard.alert_settings.get(String network_id)
+
+// Update the alert configuration for this network.
+Object dashboard.alert_settings.update(String network_id, Object params)
+```
+
+### Analytics
+```javascript
+// Returns an overview of aggregate analytics data for a timespan.
+Object dashboard.analytics.overview(String serial)
+
+// Returns all configured analytic zones for this camera.
+Object dashboard.analytics.zones(String serial)
+
+// Return historical records for analytic zones.
+Object dashboard.analytics.historicalRecords(String serial, String zone_id, Object params)
+
+// Returns most recent record for analytics zones.
+Object dashboard.analytics.recentRecords(String serial)
+
+// Returns live state from camera of analytics zones.
+Object dashboard.analytics.liveRecords(String serial)
+```
+
 ### Bluetooth Clients
 ```javascript
 // List the Bluetooth clients seen by APs in this network.
@@ -64,12 +102,36 @@ Array dashboard.bluetooth_clients.list(String network_id, Object params)
 Object dashboard.bluetooth_clients.get(String network_id, String client_mac, Object params)
 ```
 
+### Cameras
+```javascript
+// Returns video link for the specified camera. If a timestamp supplied, it links to that time.
+Object dashboard.cameras.videoLink(String network_id, String serial, Number timestamp)
+```
+
 ### Clients
 ```javascript
 // List the clients of a device, up to a maximum of a month ago. The usage of each client is returned in kilobytes.
 // If the device is a switch, the switchport is returned; otherwise the switchport field is null.
 // The timespan must be less than or equal to 2592000 seconds (or one month).
 Array dashboard.clients.list(String serial, Number timespan)
+
+// Return the client associated with the given identifier. This endpoint will lookup by client ID or either the MAC or IP depending on whether the network uses Track-by-IP.
+Object dashboard.clients.get(String network_id, String client_id_or_mac_or_ip)
+
+// Return the client's daily usage history. Usage data is in kilobytes.
+Array dashboard.clients.usageHistory(String network_id, String client_id_or_mac_or_ip)
+
+// Return the client's network traffic data over time. Usage data is in kilobytes. This endpoint requires detailed traffic analysis to be enabled on the Network-wide > General page.
+Array dashboard.clients.trafficHistory(String network_id, String client_id_or_mac_or_ip, Object params)
+
+// Return the events associated with this client.
+Array dashboard.clients.events(String network_id, String client_id_or_mac_or_ip, Object params)
+
+// Return the latency history for a client. The latency data is from a sample of 2% of packets and is grouped into 4 traffic categories: background, best effort, video, voice. Within these categories the sampled packet counters are bucketed by latency in milliseconds.
+Array dashboard.client.latencyHistory(String network_id, String client_id_or_mac_or_ip, Object params)
+
+// Return a client's security events.
+Array dashboard.clients.securityEvents(String network_id, String client_mac, Object params)
 
 // Return the policy assigned to a client on the network. The timespan must be less than or equal to 2592000 seconds (or one month).
 Object dashboard.clients.getPolicy(String network_id, String client_mac, Number timespan)
@@ -82,21 +144,6 @@ Object dashboard.clients.getSplashAuth(String network_id, String client_mac)
 
 // Update a client's splash authorization.
 Object dashboard.clients.updateSplashAuth(String network_id, String client_mac, Object params)
-
-// Return a client either by client ID, MAC or IP address.
-Object dashboard.clients.get(String network_id, String client_mac)
-
-// Return the client's daily usage history. Usage data is in kilobytes.
-Array dashboard.clients.usageHistory(String network_id, String client_mac)
-
-// Return the client's network traffic data over time. Usage data is in kilobytes.
-Array dashboard.clients.trafficHistory(String network_id, String client_mac, Object params)
-
-// Return a client's events.
-Array dashboard.clients.events(String network_id, String client_mac, Object params)
-
-// Return a client's security events.
-Array dashboard.clients.securityEvents(String network_id, String client_mac, Object params)
 ```
 
 ### Config templates
@@ -129,13 +176,56 @@ dashboard.devices.claim(String network_id, Object params)
 dashboard.devices.remove(String network_id, String serial)
 
 // List LLDP and CDP information for a device. The timespan must be less than or equal to 2592000 seconds (or one month).
-Object dashboard.devices.lldp_cdp_info(String network_id, String serial, Number timespan)
+Object dashboard.devices.lldpCdpInfo(String network_id, String serial, Number timespan)
+
+// Get the uplink loss percentage and latency in milliseconds for a wired network device.
+Array dashboard.devices.lossAndLatencyHistory(String network_id, String serial, Object params)
+
+// Return the performance score for a single device (MX).
+// Extra documentation: https://documentation.meraki.com/MX/Monitoring_and_Reporting/Device_Utilization
+Object dashboard.devices.performanceScore(String network_id, String serial)
+```
+
+### Firewalled services
+```javascript
+// List the appliance services and their accessibility rules.
+Array dashboard.firewalled_services.list(String network_id)
+
+// Return the accessibility settings of the given service ('ICMP', 'web', or 'SNMP').
+Object dashboard.firewalled_services.get(String network_id, String service)
+
+// Updates the accessibility settings for the given service ('ICMP', 'web', or 'SNMP').
+Object dashboard.firewalled_services.update(String network_id, String service, Object params)
 ```
 
 ### Group policies
 ```javascript
 // List the group policies in a network.
 Array dashboard.group_policies.list(String network_id)
+```
+
+### HTTP servers
+```javascript
+// List the HTTP servers for a network.
+Array dashboard.http_servers.list(String network_id)
+
+// Return an HTTP server.
+Object dashboard.http_servers.get(String network_id, String server_id)
+
+// Update an HTTP server.
+Object dashboard.http_servers.update(String network_id, String server_id, Object params)
+
+// Add an HTTP server.
+Object dashboard.http_servers.create(String network_id, Object params)
+
+// Delete an HTTP server.
+dashboard.http_servers.delete(String network_id, String server_id)
+
+// Send a test webhook.
+Object dashboard.http_servers.test(String network_id, String url)
+
+// Return the status of a webhook test.
+Object dashboard.http_servers.testStatus(String network_id, String test_id)
 ```
 
 ### Meraki Auth
@@ -145,15 +235,6 @@ Array dashboard.meraki_auth.list(String network_id)
 
 // Return the specified splash or RADIUS user.
 Object dashboard.meraki_auth.get(String network_id, String user_id)
-```
-
-### Hotspot 2.0 (Only applies to the Meraki DevNet Sandbox)
-```javascript
-// Return the Hotspot 2.0 settings for an SSID.
-Object dashboard.hotspot_v2.getSettings(String network_id, Number ssid)
-
-// Update the Hotspot 2.0 settings for an SSID.
-Object dashboard.hotspot_v2.updateSettings(String network_id, Number ssid, Object params)
 ```
 
 ### MR L3 Firewall
@@ -190,6 +271,24 @@ Array dashboard.mx_cellular_firewall.getRules(String network_id)
 
 // Update firewall rules of an organization's site-to-site VPN.
 Array dashboard.mx_cellular_firewall.updateRules(String network_id, Object params)
+```
+
+### Named tag scope
+```javascript
+// List the named tag scopes in this network.
+Array dashboard.named_tag_scope.list(String network_id, Boolean with_details)
+
+// Return a named tag scope.
+Object dashboard.named_tag_scope.get(String network_id, String named_tag_scope_id, Boolean with_details)
+
+// Update a named tag scope.
+Object dashboard.named_tag_scope.update(String network_id, String named_tag_scope_id, Object params)
+
+// Add a named_tag_scope.
+Object dashboard.named_tag_scope.create(String network_id, Object params)
+
+// Delete a named tag scope from a network.
+dashboard.named_tag_scope.delete(String network_id, String named_tag_scope_id)
 ```
 
 ### Networks
@@ -279,6 +378,18 @@ Array dashboard.organizations.getThirdPartyVpnPeers(String organization_id)
 
 // Update the third party VPN peers for an organization.
 Array dashboard.organizations.updateThirdPartyVpnPeers(String organization_id, Object params)
+```
+
+### Phone announcements
+```javascript
+// List all announcement groups in a network.
+Array dashboard.phone_announcements.list(String network_id)
+
+// Add an announcement group.
+Object dashboard.phone_announcements.add(String network_id, String name)
+
+// Delete an announcement group.
+dashboard.phone_announcements.delete(String network_id, String group_id)
 ```
 
 ### Phone assignments
@@ -406,7 +517,7 @@ Object dashboard.saml_roles.create(String organization_id, Object params)
 dashboard.saml_roles.delete(String organization_id, String role_id)
 ```
 
-### SM
+### System Manager
 
 #### Cisco Clarity
 ```javascript
@@ -459,10 +570,58 @@ Object dashboard.sm.cisco_polaris.getAppDetails(String network_id, String bundle
 Object dashboard.sm.cisco_polaris.deleteApp(String network_id, String app_id)
 ```
 
+#### Device
+```javascript
+// List the network adapters of a device.
+Array dashboard.sm.device.networkAdapters(String network_id, String device_id)
+
+// List the saved SSID names on a device.
+Array dashboard.sm.device.wlanLists(String network_id, String device_id)
+
+// List the security centers on a device.
+Array dashboard.sm.device.securityCenters(String network_id, String device_id)
+
+// List the restrictions on a device.
+Array dashboard.sm.device.restrictions(String network_id, String device_id)
+
+// List the certs on a device.
+Array dashboard.sm.device.certs(String network_id, String device_id)
+
+// Return the client's daily cellular data usage history. Usage data is in kilobytes.
+Object dashboard.sm.device.cellularUsage(String network_id, String device_id)
+
+// Return historical records of various Systems Manager client metrics for desktop devices.
+Array dashboard.sm.device.performanceHistory(String network_id, String device_id, Object params)
+
+// Return historical records of various Systems Manager network connection details for desktop devices.
+Array dashboard.sm.device.(String network_id, String device_id, Object params)
+
+// Return historical records of commands sent to Systems Manager devices.
+Object dashboard.sm.device.(String network_id, String device_id, Object params)
+
+// Returns historical connectivity data (whether a device is regularly checking in to Dashboard).
+Object dashboard.sm.device.(String network_id, String device_id, Object params)
+```
+
 #### Misc. Functions
 ```javascript
 // List the devices enrolled in an SM network with various specified fields and filters.
-Object dashboard.sm.listDevices(String network_id)
+Array dashboard.sm.listDevices(String network_id)
+
+// List the owners in an SM network with various specified fields and filters.
+Array dashboard.sm.listOwners(String network_id, Object params)
+
+// Get the profiles associated with a user.
+Array dashboard.sm.listProfilesByUser(String network_id, String user_id)
+
+// Get the profiles associated with a device.
+Array dashboard.sm.listProfilesByDevice(String network_id, String device_id)
+
+// Get a list of softwares associated with a user.
+Array dashboard.sm.listSoftwareByUser(String network_id, String user_id)
+
+// Get a list of softwares associated with a device.
+Array dashboard.sm.listSoftwareByDevice(String network_id, String device_id)
 
 // Add, delete, or update the tags of a set of devices.
 Object dashboard.sm.editTags(String network_id, Object params)
@@ -498,6 +657,18 @@ Object dashboard.ssids.get(String network_id, String ssid)
 Object dashboard.ssids.update(String network_id, String ssid, Object params)
 ```
 
+### Splash Page
+```javascript
+// List the splash login attempts for a network.
+Array dashboard.splash_page.loginAttempts(String network_id, Object params)
+
+// Display the splash page settings for the given SSID
+Object dashboard.splash_page.getSettings(String network_id, String ssid)
+
+// Modify the splash page settings for the given SSID
+Object dashboard.splash_page.updateSettings(String network_id, String ssid, Object params)
+```
+
 ### Static routes
 ```javascript
 // List the static routes for this network.
@@ -528,6 +699,15 @@ Object dashboard.switch_ports.get(String serial, Number port_number)
 Object dashboard.switch_ports.update(String serial, Number port_number, Object params)
 ```
 
+### Syslog servers
+```javascript
+// List the syslog servers for a network.
+Array dashboard.syslog_servers.list(String network_id)
+
+// Update the syslog servers for a network.
+Array dashboard.syslog_servers.update(String network_id, Array servers)
+```
+
 ### VLANs
 ```javascript
 // List the VLANs for this network.
@@ -544,4 +724,74 @@ Object dashboard.vlans.add(String network_id, Object params)
 
 // Delete a VLAN from a network.
 dashboard.vlans.delete(String network_id, String vlan_id)
+
+// Returns the enabled status of VLANs for the network.
+Object dashboard.vlans.isEnabled(String network_id)
+
+// Enable/Disable VLANs for the given network.
+Object dashboard.vlans.setEnabled(String network_id, Boolean enabled)
+```
+
+### Wireless Health
+
+#### Connectivity Info
+```javascript
+// Aggregated connectivity info for this network.
+Object dashboard.wireless_health.connectivity_info.general(String network_id, Object params)
+
+// Aggregated connectivity info for this network, grouped by node.
+Array dashboard.wireless_health.connectivity_info.groupByNode(String network_id, Object params)
+
+// Aggregated connectivity info for a given AP on this network.
+Object dashboard.wireless_health.connectivity_info.forAP(String network_id, String serial, Object params)
+
+// Aggregated connectivity info for this network, grouped by clients.
+Array dashboard.wireless_health.connectivity_info.groupByClient(String network_id, Object params)
+
+// Aggregated connectivity info for a given client on this network.
+Object dashboard.wireless_health.connectivity_info.forClient(String network_id, String client_id, Object params)
+```
+
+#### Latency Info
+```javascript
+// Aggregated latency info for this network.
+Object dashboard.wireless_health.latency_info.general(String network_id, Object params)
+
+// Aggregated latency info for this network, grouped by node.
+Array dashboard.wireless_health.latency_info.groupByNode(String network_id, Object params)
+
+// Aggregated latency info for a given AP on this network.
+Object dashboard.wireless_health.latency_info.forAP(String network_id, String serial, Object params)
+
+// Aggregated latency info for this network, grouped by clients.
+Array dashboard.wireless_health.latency_info.groupByClient(String network_id, Object params)
+
+// Aggregated latency info for a given client on this network.
+Object dashboard.wireless_health.latency_info.forClient(String network_id, String client_id, Object params)
+```
+
+#### Misc. Functions
+```javascript
+// List of all failed client connection events on this network in a given time range
+Array dashboard.wireless_health.failed_events(String network_id, Object params)
+```
+
+### Custom API calls
+Just in case that some API methods may not be covered by this module, a bunch of custom functions are available to use. They will return the parsed response received from making the call.
+
+```javascript
+// Perform a custom HEAD request
+Object dashboard.custom.head(String url)
+
+// Perform a custom GET request
+Object dashboard.custom.get(String url, Object parameters)
+
+// Perform a custom POST request
+Object dashboard.custom.post(String url, Object parameters)
+
+// Perform a custom PUT request
+Object dashboard.custom.put(String url, Object parameters)
+
+// Perform a custom DELETE request
+Object dashboard.custom.delete(String url)
 ```

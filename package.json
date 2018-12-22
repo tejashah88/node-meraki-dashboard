@@ -1,11 +1,25 @@
 {
   "name": "node-meraki-dashboard",
   "version": "1.2.0",
-  "description": "A slightly opinionated node.js client library for using the Meraki Dashboard API.",
+  "description": "A modern node.js client library for using the Meraki Dashboard API.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src/**/*.js",
+    "lint-fix": "eslint src/**/*.js --fix",
+    "test": "mocha test/**/*.js",
+    "test-with-coverage": "nyc mocha test/**/*.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "api-coverage": "node ./tools/api-coverage.js"
   },
+  "keywords": [
+    "cisco",
+    "meraki",
+    "cisco-meraki",
+    "dashboard",
+    "client",
+    "library",
+    "api"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tejashah88/node-meraki-dashboard.git"
@@ -18,9 +32,19 @@
   "homepage": "https://github.com/tejashah88/node-meraki-dashboard#readme",
   "dependencies": {
     "axios": "^0.18.0",
-    "json-bigint": "^0.2.3"
+    "json-bigint": "^0.3.0"
   },
   "devDependencies": {
-    "eslint": "^4.19.1"
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-things": "^0.2.0",
+    "chalk": "^2.4.1",
+    "eslint": "^5.10.0",
+    "json-from-text": "^1.1.0",
+    "minimist": "^1.2.0",
+    "mocha": "^5.2.0",
+    "string.prototype.matchall": "^3.0.1",
+    "table": "^5.1.1",
+    "unique-objects": "^1.0.3"
   }
 }
