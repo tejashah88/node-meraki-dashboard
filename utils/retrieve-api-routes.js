@@ -7,7 +7,7 @@ const officialParamRegex =/(\[\w+\])/g;
 const postmanParamRegex = /({{[\w-]+}})/g;
 
 const officialDocsUrl = 'https://api.meraki.com/api_docs';
-const postmanDocsUrl = 'https://documenter.getpostman.com/api/collections/897512/2To9xm?environment=897512-98a67320-8ab1-37f1-7a1e-9c29faa86c1d';
+const postmanDocsUrl = 'https://documenter.getpostman.com/api/collections/897512/2To9xm';
 
 function retrieveOfficialDocs() {
   return axios.get(officialDocsUrl)

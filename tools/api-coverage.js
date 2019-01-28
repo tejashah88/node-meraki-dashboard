@@ -35,7 +35,7 @@ Promise.all([
       endpoint => !implEndpointsInfo.includes(stringifyEndpoint(endpoint))
     );
 
-    let postmanBlacklist;
+    let postmanBlacklist = [];
     if (argv['disable-blacklist'] === true) {
       console.log('Ignoring blacklist...');
     } else {
@@ -45,7 +45,7 @@ Promise.all([
         postmanBlacklist = JSON.parse(fs.readFileSync(blacklistedEndpointsPath, 'utf-8'));
         console.log('Done');
       } else {
-        postmanBlacklist = null;
+        postmanBlacklist = [];
         console.log('Unable to locate blacklist. It will be generated!');
       }
 
