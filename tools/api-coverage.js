@@ -36,7 +36,7 @@ Promise.all([
     );
 
     let postmanBlacklist = [];
-    if (argv['disable-blacklist'] === true) {
+    if (argv['disable-blacklist'] || argv['save-blacklist']) {
       console.log('Ignoring blacklist...');
     } else {
       console.log('Reading from blacklist...');
@@ -86,7 +86,7 @@ Promise.all([
 
     console.log(results);
 
-    if (postmanBlacklist === null || argv['save-blacklist'] === true) {
+    if (argv['save-blacklist']) {
       console.log('Saving detected postman endpoints to blacklist...');
       postmanBlacklist = endpointData
         .filter(endpoint => endpoint.source === 'postman')
