@@ -13,6 +13,10 @@
 * Clients - `dashboard.clients`
   * Provision clients - `dashboard.clients.provision`
 
+### Bug fixes
+* Saving to blacklist will automatically disable current blacklist
+* Blacklist generation can now include official endpoints
+
 ## v2.0.0 - (Dec/22/2018)
 
 ### :warning: Breaking Changes :warning:

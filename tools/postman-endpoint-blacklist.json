@@ -46,5 +46,9 @@
   {
     "method": "POST",
     "path": "/networks/<param>/phoneCallgroups/<param>"
+  },
+  {
+    "method": "PUT",
+    "path": "/network/<param>/uplinkSettings"
   }
 ]

@@ -35,14 +35,14 @@ Promise.all([
       endpoint => !implEndpointsInfo.includes(stringifyEndpoint(endpoint))
     );
 
-    let postmanBlacklist = [];
+    let blacklist = [];
     if (argv['disable-blacklist'] || argv['save-blacklist']) {
       console.log('Ignoring blacklist...');
     } else {
       console.log('Reading from blacklist...');
 
       if (fs.existsSync(blacklistedEndpointsPath)) {
-        postmanBlacklist = JSON.parse(fs.readFileSync(blacklistedEndpointsPath, 'utf-8'));
+        blacklist = JSON.parse(fs.readFileSync(blacklistedEndpointsPath, 'utf-8'));
         console.log('Done');
       } else {
         console.log('Unable to locate blacklist. It will be generated!');
@@ -51,9 +51,9 @@ Promise.all([
       console.log();
     }
 
-    const prettyPostmanBlacklist = postmanBlacklist.map(stringifyEndpoint);
+    const prettyBlacklist = blacklist.map(stringifyEndpoint);
     endpointData = endpointData.filter(
-      endpoint => !prettyPostmanBlacklist.includes(stringifyEndpoint(endpoint))
+      endpoint => !prettyBlacklist.includes(stringifyEndpoint(endpoint))
     );
 
     const coloredEndpointData = endpointData.map(({ source, group, method, path }) => {
@@ -88,11 +88,8 @@ Promise.all([
 
     if (argv['save-blacklist']) {
       console.log('Saving detected postman endpoints to blacklist...');
-      postmanBlacklist = endpointData
-        .filter(endpoint => endpoint.source === 'postman')
-        .map(({ method, path }) => ({ method, path }));
-
-      fs.writeFileSync(blacklistedEndpointsPath, JSON.stringify(postmanBlacklist, null, 2), 'utf-8');
+      blacklist = endpointData.map(({ method, path }) => ({ method, path }));
+      fs.writeFileSync(blacklistedEndpointsPath, JSON.stringify(blacklist, null, 2), 'utf-8');
       console.log('Done!');
     }
   });
