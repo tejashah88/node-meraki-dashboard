@@ -73,6 +73,6 @@ npm run api-coverage -- --disable-blacklist --save-blacklist
 ```
 
 * `disable-blacklist` - disables reading from the blacklist
-* `save-blacklist` - saves or overwrites the current blacklist with the current analysis
+* `save-blacklist` - saves or overwrites the current blacklist with the current analysis **(you must use with `disable-blacklist` in order to append new endpoints to it)**
 
 You can omit either or both arguments to suite your needs.

@@ -84,6 +84,7 @@ function MerakiDashboard(apiKey) {
   dashboard.clients = {
     list: (serial, timespan) => rest.get(`/devices/${serial}/clients`, ensureValueVerbose(timespan, { timespan }, {})),
     get: (network_id, client_id_or_mac_or_ip) => rest.get(`/networks/${network_id}/clients/${client_id_or_mac_or_ip}`),
+    provision: (network_id, params) => rest.post(`/networks/${network_id}/clients/provision`, params),
     usageHistory: (network_id, client_id_or_mac_or_ip) => rest.get(`/networks/${network_id}/clients/${client_id_or_mac_or_ip}/usageHistory`),
     trafficHistory: (network_id, client_id_or_mac_or_ip, params) => rest.get(`/networks/${network_id}/clients/${client_id_or_mac_or_ip}/trafficHistory`, params),
     events: (network_id, client_id_or_mac_or_ip, params) => rest.get(`/networks/${network_id}/clients/${client_id_or_mac_or_ip}/events`, params),
@@ -98,6 +99,16 @@ function MerakiDashboard(apiKey) {
   dashboard.config_templates = {
     list: (organization_id) => rest.get(`/organizations/${organization_id}/configTemplates`),
     remove: (organization_id, template_id) => rest.delete(`/organizations/${organization_id}/configTemplates/${template_id}`)
+  };
+
+  dashboard.content_filtering = {
+    categories: {
+      get: (network_id) => rest.get(`/networks/${network_id}/contentFiltering/categories`)
+    },
+    rules: {
+      get: (network_id) => rest.get(`/networks/${network_id}/contentFiltering`),
+      update: (network_id, params) => rest.put(`/networks/${network_id}/contentFiltering`, params)
+    }
   };
 
   dashboard.devices = {
@@ -342,9 +353,19 @@ function MerakiDashboard(apiKey) {
     update: (serial, port_number, params) => rest.put(`/devices/${serial}/switchPorts/${port_number}`, params)
   };
 
+  dashboard.switch_settings = {
+    get: (network_id) => rest.get(`/networks/${network_id}/switch/settings`),
+    update: (network_id, params) => rest.put(`/networks/${network_id}/switch/settings`, params)
+  };
+
   dashboard.syslog_servers = {
     list: (network_id) => rest.get(`/networks/${network_id}/syslogServers`),
     update: (network_id, servers) => rest.put(`/networks/${network_id}/syslogServers`, ensureValueVerbose(servers, { servers }, {}))
+  };
+
+  dashboard.uplink_settings = {
+    get: (network_id) => rest.get(`/networks/${network_id}/uplinkSettings`),
+    update: (network_id, params) => rest.put(`/networks/${network_id}/uplinkSettings`, params)
   };
 
   dashboard.vlans = {

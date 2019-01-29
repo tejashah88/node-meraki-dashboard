@@ -1,6 +1,10 @@
 [
   {
     "method": "GET",
+    "path": "/devices/<param>/camera/analytics/zones/0/history"
+  },
+  {
+    "method": "GET",
     "path": "/devices/<param>/cameras/video_link"
   },
   {
@@ -26,6 +30,10 @@
   {
     "method": "PUT",
     "path": "/networks/<param>/firewalledServices/web"
+  },
+  {
+    "method": "GET",
+    "path": "/networks/<param>/ssids/<param>]/l3FirewallRules"
   },
   {
     "method": "PUT",

@@ -1,16 +1,21 @@
 ## Table of Contents
+* [Table of Contents](#table-of-contents)
 * [Documentation](#documentation)
   * [Admins](#admins)
   * [Alert settings](#alert-settings)
   * [Analytics](#analytics)
-  * [Cameras](#cameras)
   * [Bluetooth Clients](#bluetooth-clients)
+  * [Cameras](#cameras)
   * [Clients](#clients)
   * [Config templates](#config-templates)
+  * [Content Filtering](#content-filtering)
+    * [Categories](#categories)
+    * [Rules](#rules)
   * [Devices](#devices)
   * [Firewalled services](#firewalled-services)
   * [Group policies](#group-policies)
-  * [HTTP Servers](#http-servers)
+  * [HTTP servers](#http-servers)
+  * [Meraki Auth](#meraki-auth)
   * [MR L3 Firewall](#mr-l3-firewall)
   * [MX L3 Firewall](#mx-l3-firewall)
   * [MX VPN Firewall](#mx-vpn-firewall)
@@ -36,20 +41,23 @@
   * [Splash Page](#splash-page)
   * [Static routes](#static-routes)
   * [Switch ports](#switch-ports)
+  * [Switch settings](#switch-settings)
   * [Syslog servers](#syslog-servers)
+  * [Uplink settings](#uplink-settings)
   * [VLANs](#vlans)
   * [Wireless Health](#wireless-health)
     * [Connectivity Info](#connectivity-info)
     * [Latency Info](#latency-info)
-    * [Misc. Functions](#misc-functions)
+    * [Misc. Functions](#misc-functions-1)
   * [Custom API calls](#custom-api-calls)
 
 ## Documentation
 * Official Documentation: https://api.meraki.com/api_docs
 * Postman Documentation: https://documenter.getpostman.com/view/897512/2To9xm
 
-##### All functions return a promise, which either resolves to the data received, or rejects with an error.
-##### Despite the prescence of types in the documentation, they are NOT enforced in the library. They are more useful as a guide but passing the wrong kind of data can cause unexpected behavior.
+**Note**: All functions return a promise, which either resolves to the data received, or rejects with an error.
+
+**Note**: Despite the prescence of types in the documentation, they are NOT enforced in the library. They are more useful as a guide but passing the wrong kind of data can cause unexpected behavior.
 
 ### Admins
 ```javascript
@@ -118,6 +126,9 @@ Array dashboard.clients.list(String serial, Number timespan)
 // Return the client associated with the given identifier. This endpoint will lookup by client ID or either the MAC or IP depending on whether the network uses Track-by-IP.
 Object dashboard.clients.get(String network_id, String client_id_or_mac_or_ip)
 
+// Provisions a client with a name and policy. Clients can be provisioned before they associate to the network.
+Object dashboard.clients.provision(String network_id, Object params)
+
 // Return the client's daily usage history. Usage data is in kilobytes.
 Array dashboard.clients.usageHistory(String network_id, String client_id_or_mac_or_ip)
 
@@ -153,6 +164,23 @@ Array dashboard.config_templates.list(String organization_id)
 
 // Remove a configuration template.
 dashboard.config_templates.remove(String organization_id, String template_id)
+```
+
+### Content Filtering
+
+#### Categories
+```javascript
+// List all available content filtering categories for an MX network.
+Object dashboard.content_filtering.categories.get(String network_id)
+```
+
+#### Rules
+```javascript
+// Return the content filtering settings for an MX network.
+Object dashboard.content_filtering.rules.get(String network_id)
+
+// Update the content filtering settings for an MX network.
+Object dashboard.content_filtering.rules.update(String network_id, Object params)
 ```
 
 ### Devices
@@ -468,7 +496,7 @@ Object dashboard.phone_numbers.listAvailable(String network_id)
 ```
 
 ### Personal Identifying Information (PII)
-##### Applies for both organizations and networks
+**Note**: Applies for both organizations and networks
 ```javascript
 // List the keys required to access PII for a given identifier. Exactly one identifier will be accepted.
 Object dashboard.pii.organizations.list(String organization_id, Object params)
@@ -699,6 +727,15 @@ Object dashboard.switch_ports.get(String serial, Number port_number)
 Object dashboard.switch_ports.update(String serial, Number port_number, Object params)
 ```
 
+### Switch settings
+```javascript
+// Returns the switch network settings.
+Object dashboard.switch_settings.get(String network_id)
+
+// Update the switch network settings.
+Object dashboard.switch_settings.update(String network_id, Object params)
+```
+
 ### Syslog servers
 ```javascript
 // List the syslog servers for a network.
@@ -706,6 +743,15 @@ Array dashboard.syslog_servers.list(String network_id)
 
 // Update the syslog servers for a network.
 Array dashboard.syslog_servers.update(String network_id, Array servers)
+```
+
+### Uplink settings
+```javascript
+// Returns the uplink settings for your MX network.
+Object dashboard.uplink_settings.get(String network_id)
+
+// Update the uplink settings for your MX network.
+Object dashboard.uplink_settings.update(String network_id, Object params)
 ```
 
 ### VLANs

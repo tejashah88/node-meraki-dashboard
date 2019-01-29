@@ -3,7 +3,7 @@
 const axios = require('axios');
 const jsonFromText = require('json-from-text');
 
-const officialParamRegex =/(\[\w+\])/g;
+const officialParamRegex =/([\[\{]\w+[\}\]])/g;
 const postmanParamRegex = /({{[\w-]+}})/g;
 
 const officialDocsUrl = 'https://api.meraki.com/api_docs';
