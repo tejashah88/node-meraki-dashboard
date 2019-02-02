@@ -2,7 +2,7 @@
   "name": "node-meraki-dashboard",
   "version": "2.1.0",
   "description": "A modern node.js client library for using the Meraki Dashboard API.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "lint": "eslint src/**/*.js",
     "lint-fix": "eslint src/**/*.js --fix",
