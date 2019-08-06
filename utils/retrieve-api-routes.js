@@ -3,7 +3,7 @@
 const axios = require('axios');
 const jsonFromText = require('json-from-text');
 
-const officialParamRegex =/([\[\{]\w+[\}\]])/g;
+const officialParamRegex =/([\[\{](\w+)[\}\]])/g;
 const officialDocsUrl = 'https://api.meraki.com/api_docs';
 
 function retrieveOfficialDocs() {
@@ -27,7 +27,7 @@ function retrieveOfficialDocs() {
 
           return {
             group, method, description,
-            path: path.replace(officialParamRegex, '<param>'),
+            path: path.replace(officialParamRegex, '<$2>'),
             alt_path: alternate_path ? alternate_path.replace(officialParamRegex, '<param>') : null,
             params: params || null
           };

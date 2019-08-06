@@ -5,6 +5,7 @@ const uniqueObjects = require('unique-objects');
 const { table } = require('table');
 const chalk = require('chalk');
 const values = require('object.values');
+const wrap = require('word-wrap');
 
 const { retrieveOfficialDocs } = require('../utils/retrieve-api-routes');
 const { getImplementedEndpoints } = require('../utils/code-analyzer');
@@ -28,14 +29,18 @@ retrieveOfficialDocs()
   // filter uniquely by method and path
   .then(combined => uniqueObjects(combined, ['method', 'path']))
   // filter out implemented endpoints
-  .then(rawEndpoints => rawEndpoints.filter(endpoint => !implEndpoints.includes(strEndpoint(endpoint))))
+  .then(rawEndpoints => rawEndpoints.filter(
+    endpoint => !implEndpoints.includes(
+      strEndpoint(endpoint).replace(/<(\w+)>/g, '<param>')
+    )
+  ))
   .then(endpointData => {
     const coloredEndpointData = endpointData.map(
       ({ group, method, path, description }) => ([
         group,
         METHOD_COLORS[method](method),
-        path.replace(/<param>/g, chalk.cyanBright('<param>')),
-        description.endsWith('.') ? description : description + '.'
+        path.replace(/<(\w+)>/g, chalk.cyanBright('<$1>')),
+        wrap(description.endsWith('.') ? description : description + '.', { width: 100, trim: true, indent: '' })
       ])
     );
 
