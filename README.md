@@ -3,7 +3,6 @@
 [![NPM Version](https://img.shields.io/npm/v/node-meraki-dashboard.svg)](https://www.npmjs.com/package/node-meraki-dashboard)
 [![Build Status](https://travis-ci.org/tejashah88/node-meraki-dashboard.svg?branch=master)](https://travis-ci.org/tejashah88/node-meraki-dashboard)
 [![Coverage Status](https://coveralls.io/repos/github/tejashah88/node-meraki-dashboard/badge.svg)](https://coveralls.io/github/tejashah88/node-meraki-dashboard)
-[![dependencies Status](https://david-dm.org/tejashah88/node-meraki-dashboard/status.svg)](https://david-dm.org/tejashah88/node-meraki-dashboard)
 
 A modern node.js client library for using the Meraki Dashboard API. Supports a minimum of node v6.
 

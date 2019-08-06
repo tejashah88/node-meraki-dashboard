@@ -27,6 +27,7 @@ function retrieveOfficialDocs() {
 
           return {
             group, method, description,
+            has_params: params != null,
             path: path.replace(officialParamRegex, '<$2>'),
             alt_path: alternate_path ? alternate_path.replace(officialParamRegex, '<param>') : null,
             params: params || null

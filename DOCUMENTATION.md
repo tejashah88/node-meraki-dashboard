@@ -1,9 +1,10 @@
 ## Table of Contents
 * [Table of Contents](#table-of-contents)
 * [Documentation](#documentation)
+  * [API Usage](#api-usage)
   * [Admins](#admins)
   * [Alert settings](#alert-settings)
-  * [Analytics](#analytics)
+  * [Action Batches](#action-batches)
   * [Bluetooth Clients](#bluetooth-clients)
   * [Cameras](#cameras)
   * [Clients](#clients)
@@ -15,13 +16,26 @@
   * [Firewalled services](#firewalled-services)
   * [Group policies](#group-policies)
   * [HTTP servers](#http-servers)
+  * [Intrusion Settings](#intrusion-settings)
+    * [Organization](#organization)
+    * [MX Network](#mx-network)
+  * [Malware settings](#malware-settings)
+  * [Management interface settings](#management-interface-settings)
   * [Meraki Auth](#meraki-auth)
   * [MR L3 Firewall](#mr-l3-firewall)
+  * [MV Sense](#mv-sense)
+  * [MX 1:1 NAT Rules](#mx-11-nat-rules)
+  * [MX 1:Many NAT Rules](#mx-1many-nat-rules)
   * [MX L3 Firewall](#mx-l3-firewall)
+  * [MX L7 application categories](#mx-l7-application-categories)
+  * [MX L7 firewall](#mx-l7-firewall)
   * [MX VPN Firewall](#mx-vpn-firewall)
   * [MX Cellular Firewall](#mx-cellular-firewall)
+  * [MX port forwarding rules](#mx-port-forwarding-rules)
   * [Named tag scope](#named-tag-scope)
+  * [NetFlow settings](#netflow-settings)
   * [Networks](#networks)
+  * [OpenAPI Spec](#openapi-spec)
   * [Organizations](#organizations)
   * [Phone announcements](#phone-announcements)
   * [Phone assignments](#phone-assignments)
@@ -37,14 +51,23 @@
     * [Cisco Polaris](#cisco-polaris)
     * [Device](#device)
     * [Misc. Functions](#misc-functions)
+  * [Radio Settings](#radio-settings)
+  * [SNMP Settings](#snmp-settings)
   * [SSIDs](#ssids)
+  * [Security Events](#security-events)
   * [Splash Page](#splash-page)
   * [Static routes](#static-routes)
+  * [Switch port schedules](#switch-port-schedules)
   * [Switch ports](#switch-ports)
+  * [Switch profiles](#switch-profiles)
   * [Switch settings](#switch-settings)
+  * [Switch stacks](#switch-stacks)
   * [Syslog servers](#syslog-servers)
+  * [Traffic analysis settings](#traffic-analysis-settings)
+  * [Traffic Shaping](#traffic-shaping)
   * [Uplink settings](#uplink-settings)
   * [VLANs](#vlans)
+  * [Webhook logs](#webhook-logs)
   * [Wireless Health](#wireless-health)
     * [Connectivity Info](#connectivity-info)
     * [Latency Info](#latency-info)
@@ -55,9 +78,15 @@
 * Official Documentation: https://api.meraki.com/api_docs
 * Postman Documentation: https://documenter.getpostman.com/view/897512/2To9xm
 
-**Note**: All functions return a promise, which either resolves to the data received, or rejects with an error.
+All functions return a promise, which either resolves to the data received, or rejects with an error.
 
-**Note**: Despite the prescence of types in the documentation, they are NOT enforced in the library. They are more useful as a guide but passing the wrong kind of data can cause unexpected behavior.
+**Note**: Despite the presence of types in the documentation, they are NOT enforced in the library. Passing the wrong kind of data can cause unexpected behavior.
+
+### API Usage
+```javascript
+// List the API requests made by an organization.
+Array dashboard.api_usage.api_requests(String organization_id, Object params)
+```
 
 ### Admins
 ```javascript
@@ -83,22 +112,22 @@ Object dashboard.alert_settings.get(String network_id)
 Object dashboard.alert_settings.update(String network_id, Object params)
 ```
 
-### Analytics
+### Action Batches
 ```javascript
-// Returns an overview of aggregate analytics data for a timespan.
-Object dashboard.analytics.overview(String serial)
+// Return the list of action batches in the organization.
+Array dashboard.action_batches.list(String organization_id)
 
-// Returns all configured analytic zones for this camera.
-Object dashboard.analytics.zones(String serial)
+// Return an action batch.
+Object dashboard.action_batches.get(String organization_id, String action_batch_id)
 
-// Return historical records for analytic zones.
-Object dashboard.analytics.historicalRecords(String serial, String zone_id, Object params)
+// Create an action batch.
+Object dashboard.action_batches.create(String organization_id, Object params)
 
-// Returns most recent record for analytics zones.
-Object dashboard.analytics.recentRecords(String serial)
+// Update an action batch.
+Object dashboard.action_batches.update(String organization_id, String action_batch_id, Object params)
 
-// Returns live state from camera of analytics zones.
-Object dashboard.analytics.liveRecords(String serial)
+// Delete an action batch.
+dashboard.action_batches.delete(String organization_id, String action_batch_id)
 ```
 
 ### Bluetooth Clients
@@ -114,6 +143,9 @@ Object dashboard.bluetooth_clients.get(String network_id, String client_mac, Obj
 ```javascript
 // Returns video link for the specified camera. If a timestamp supplied, it links to that time.
 Object dashboard.cameras.videoLink(String network_id, String serial, Number timestamp)
+
+// Generate a snapshot of what the camera sees at the specified time and return a link to that image.
+Object dashboard.cameras.snapshot(String network_id, String serial, Number timestamp)
 ```
 
 ### Clients
@@ -155,6 +187,9 @@ Object dashboard.clients.getSplashAuth(String network_id, String client_mac)
 
 // Update a client's splash authorization.
 Object dashboard.clients.updateSplashAuth(String network_id, String client_mac, Object params)
+
+// List the clients that have used this network in the timespan.
+Array dashboard.clients.usedNetwork(String network_id, Object params)
 ```
 
 ### Config templates
@@ -167,7 +202,6 @@ dashboard.config_templates.remove(String organization_id, String template_id)
 ```
 
 ### Content Filtering
-
 #### Categories
 ```javascript
 // List all available content filtering categories for an MX network.
@@ -185,8 +219,11 @@ Object dashboard.content_filtering.rules.update(String network_id, Object params
 
 ### Devices
 ```javascript
+// List the devices in an organization.
+Array dashboard.devices.listByOrganization(String organization_id, Object params)
+
 // List the devices in a network.
-Array dashboard.devices.list(String network_id)
+Array dashboard.devices.listByNetwork(String network_id)
 
 // Return a single device.
 Object dashboard.devices.get(String network_id, String serial)
@@ -212,6 +249,12 @@ Array dashboard.devices.lossAndLatencyHistory(String network_id, String serial, 
 // Return the performance score for a single device (MX).
 // Extra documentation: https://documentation.meraki.com/MX/Monitoring_and_Reporting/Device_Utilization
 Object dashboard.devices.performanceScore(String network_id, String serial)
+
+// Blink the LEDs on a device.
+Object dashboard.devices.blinkLeds(String network_id, String serial, Object params)
+
+// Reboot a device.
+Object dashboard.devices.reboot(String network_id, String serial)
 ```
 
 ### Firewalled services
@@ -230,6 +273,18 @@ Object dashboard.firewalled_services.update(String network_id, String service, O
 ```javascript
 // List the group policies in a network.
 Array dashboard.group_policies.list(String network_id)
+
+// Display a group policy.
+Object dashboard.group_policies.get(String network_id, String group_policy_id)
+
+// Create a group policy.
+Object dashboard.group_policies.create(String network_id, Object params)
+
+// Update a group policy.
+Object dashboard.group_policies.update(String network_id, String group_policy_id, Object params)
+
+// Delete a group policy.
+dashboard.group_policies.delete(String network_id, String group_policy_id)
 ```
 
 ### HTTP servers
@@ -256,6 +311,43 @@ Object dashboard.http_servers.test(String network_id, String url)
 Object dashboard.http_servers.testStatus(String network_id, String test_id)
 ```
 
+### Intrusion Settings
+#### Organization
+```javascript
+// Returns all supported intrusion settings for an organization.
+Object dashboard.intrusion_settings.organization.get(String organization_id)
+
+// Sets supported intrusion settings for an organization.
+Object dashboard.intrusion_settings.organization.update(String organization_id, Object params)
+```
+
+#### MX Network
+```javascript
+// Returns all supported intrusion settings for an MX Network.
+Object dashboard.intrusion_settings.mx_network.get(String network_id)
+
+// Sets supported intrusion settings for an MX Network.
+Object dashboard.intrusion_settings.mx_network.update(String network_id, Object params)
+```
+
+### Malware settings
+```javascript
+// Returns all supported malware settings for an MX network.
+Object dashboard.malware_settings.get(String network_id)
+
+// Set the supported malware settings for an MX network.
+Object dashboard.malware_settings.update(String network_id, Object params)
+```
+
+### Management interface settings
+```javascript
+// Return the management interface settings for a device.
+Object dashboard.management_settings.get(String network_id, String serial)
+
+// Update the management interface settings for a device.
+Object dashboard.management_settings.update(String network_id, String serial, Object params)
+```
+
 ### Meraki Auth
 ```javascript
 // List the splash or RADIUS users configured under Meraki Authentication for a network.
@@ -274,6 +366,42 @@ Array dashboard.mr_l3_firewall.getRules(String network_id, Number ssid)
 Array dashboard.mr_l3_firewall.updateRules(String network_id, Number ssid, Object params)
 ```
 
+### MV Sense
+```javascript
+// Returns an overview of aggregate analytics data for a timespan.
+Object dashboard.mv_sense.overview(String serial)
+
+// Returns all configured analytic zones for this camera.
+Object dashboard.mv_sense.zones(String serial)
+
+// Return historical records for analytic zones.
+Object dashboard.mv_sense.historicalRecords(String serial, String zone_id, Object params)
+
+// Returns most recent record for analytics zones.
+Object dashboard.mv_sense.recentRecords(String serial)
+
+// Returns live state from camera of analytics zones.
+Object dashboard.mv_sense.liveRecords(String serial)
+```
+
+### MX 1:1 NAT Rules
+```javascript
+// Return the 1:1 NAT mapping rules for an MX network.
+Object dashboard.mx_nat_rules.one_to_one.get(String network_id)
+
+// Set the 1:1 NAT mapping rules for an MX network.
+Object dashboard.mx_nat_rules.one_to_one.update(String network_id, Object params)
+```
+
+### MX 1:Many NAT Rules
+```javascript
+// Return the 1:Many NAT mapping rules for an MX network.
+Object dashboard.mx_nat_rules.one_to_many.get(String network_id)
+
+// Set the 1:Many NAT mapping rules for an MX network.
+Object dashboard.mx_nat_rules.one_to_many.update(String network_id, Object params)
+```
+
 ### MX L3 Firewall
 ```javascript
 // Return the L3 firewall rules for an MX network.
@@ -281,6 +409,21 @@ Array dashboard.mx_l3_firewall.getRules(String network_id)
 
 // Update the L3 firewall rules of an MX network.
 Array dashboard.mx_l3_firewall.updateRules(String network_id, Object params)
+```
+
+### MX L7 application categories
+```javascript
+// Return the L7 firewall application categories and their associated applications for an MX network.
+Array dashboard.mx_l7_app_categories.list(String network_id)
+```
+
+### MX L7 firewall
+```javascript
+// List the MX L7 firewall rules for an MX network.
+Object dashboard.mx_l7_firewall.getRules(String network_id)
+
+// Update the MX L7 firewall rules for an MX network.
+Object dashboard.mx_l7_firewall.updateRules(String network_id, Object params)
 ```
 
 ### MX VPN Firewall
@@ -301,22 +444,40 @@ Array dashboard.mx_cellular_firewall.getRules(String network_id)
 Array dashboard.mx_cellular_firewall.updateRules(String network_id, Object params)
 ```
 
+### MX port forwarding rules
+```javascript
+// Return the port forwarding rules for an MX network.
+Object dashboard.mx_port_forwarding.getRules(String network_id)
+
+// Update the port forwarding rules for an MX network.
+Object dashboard.mx_port_forwarding.updateRules(String network_id, Object params)
+```
+
 ### Named tag scope
 ```javascript
-// List the named tag scopes in this network.
+// List the target groups in this network.
 Array dashboard.named_tag_scope.list(String network_id, Boolean with_details)
 
-// Return a named tag scope.
+// Return a target group.
 Object dashboard.named_tag_scope.get(String network_id, String named_tag_scope_id, Boolean with_details)
 
-// Update a named tag scope.
+// Update a target group.
 Object dashboard.named_tag_scope.update(String network_id, String named_tag_scope_id, Object params)
 
-// Add a named_tag_scope.
+// Add a target group.
 Object dashboard.named_tag_scope.create(String network_id, Object params)
 
-// Delete a named tag scope from a network.
+// Delete a target group from a network.
 dashboard.named_tag_scope.delete(String network_id, String named_tag_scope_id)
+```
+
+### NetFlow settings
+```javascript
+// Return the NetFlow traffic reporting settings for a network.
+Object dashboard.netflow_settings.get(String network_id)
+
+// Update the NetFlow traffic reporting settings for a network.
+Object dashboard.netflow_settings.update(String network_id, Object params)
 ```
 
 ### Networks
@@ -362,6 +523,18 @@ Object dashboard.networks.getBluetoothSettings(String network_id)
 
 // Update the Bluetooth settings for a network. See the docs page for Bluetooth settings.
 Object dashboard.networks.updateBluetoothSettings(String network_id, Object params)
+
+// Combine multiple networks into a single network.
+Object dashboard.networks.combineNetworks(String organization_id, Object params)
+
+// Split a combined network into individual networks for each type of device.
+Object dashboard.networks.splitNetwork(String network_id)
+```
+
+### OpenAPI Spec
+```javascript
+// Return the OpenAPI 2.0 Specification of the organization's API documentation in JSON.
+Object dashboard.openapi_spec.get(String organization_id)
 ```
 
 ### Organizations
@@ -372,11 +545,14 @@ Array dashboard.organizations.list()
 // Return an organization.
 Object dashboard.organizations.get(String organization_id)
 
+// Create a new organization.
+Object dashboard.organizations.create(Object params)
+
 // Update an organization.
 Object dashboard.organizations.update(String organization_id, Object params)
 
-// Create a new organization.
-Object dashboard.organizations.create(Object params)
+// Delete an organization.
+dashboard.organizations.delete(String organization_id)
 
 // Create a new organization by cloning the addressed organization.
 Object dashboard.organizations.clone(String organization_id, Object params)
@@ -400,6 +576,9 @@ Object dashboard.organizations.getSnmpSettings(String organization_id)
 
 // Update the SNMP settings for an organization.
 Object dashboard.organizations.updateSnmpSettings(String organization_id, Object params)
+
+// Return the uplink loss and latency for every MX in the organization from at latest 2 minutes ago.
+Array dashboard.organizations.getUplinkLossLatency(String organization_id, Object params)
 
 // Return the third party VPN peers for an organization.
 Array dashboard.organizations.getThirdPartyVpnPeers(String organization_id)
@@ -546,7 +725,6 @@ dashboard.saml_roles.delete(String organization_id, String role_id)
 ```
 
 ### System Manager
-
 #### Cisco Clarity
 ```javascript
 // Create a new profile containing a Cisco Clarity payload.
@@ -622,13 +800,16 @@ Object dashboard.sm.device.cellularUsage(String network_id, String device_id)
 Array dashboard.sm.device.performanceHistory(String network_id, String device_id, Object params)
 
 // Return historical records of various Systems Manager network connection details for desktop devices.
-Array dashboard.sm.device.(String network_id, String device_id, Object params)
+Array dashboard.sm.device.desktopLogs(String network_id, String device_id, Object params)
 
 // Return historical records of commands sent to Systems Manager devices.
-Object dashboard.sm.device.(String network_id, String device_id, Object params)
+Object dashboard.sm.device.commandLogs(String network_id, String device_id, Object params)
 
 // Returns historical connectivity data (whether a device is regularly checking in to Dashboard).
-Object dashboard.sm.device.(String network_id, String device_id, Object params)
+Object dashboard.sm.device.connectivityHistory(String network_id, String device_id, Object params)
+
+// Unenroll a device.
+Object dashboard.sm.device.unenroll(String network_id, String device_id)
 ```
 
 #### Misc. Functions
@@ -671,6 +852,33 @@ Object dashboard.sm.moveDevices(String network_id, Object params)
 
 // List all the profiles in the network.
 Object dashboard.sm.listProfiles(String network_id)
+
+// Bypass activation lock attempt.
+Object dashboard.sm.bypassLockAttempt(String network_id, Array<String> ids)
+
+// Bypass activation lock attempt status.
+Object dashboard.sm.bypassLockAttemptStatus(String network_id, String attempt_id)
+```
+
+### Radio Settings
+```javascript
+// Return the radio settings of a device.
+Object dashboard.radio_settings.get(String network_id, String serial)
+
+// Update the radio settings of a device.
+Object dashboard.radio_settings.update(String network_id, String serial, Object params)
+
+// List the non-basic RF profiles for this network.
+Array dashboard.radio_settings.listRfProfiles(String network_id, Object params)
+```
+
+### SNMP Settings
+```javascript
+// Return the SNMP settings for a network.
+dashboard.snmp_settings.get(String network_id)
+
+// Update the SNMP settings for a network.
+dashboard.snmp_settings.update(String network_id, Object params)
 ```
 
 ### SSIDs
@@ -683,6 +891,15 @@ Object dashboard.ssids.get(String network_id, String ssid)
 
 // Update the attributes of an SSID.
 Object dashboard.ssids.update(String network_id, String ssid, Object params)
+```
+
+### Security Events
+```javascript
+// List the security events for a organization.
+Array dashboard.security_events.byOrganization(String organization_id, Object params)
+
+// List the security events for a network.
+Array dashboard.security_events.byNetwork(String network_id, Object params)
 ```
 
 ### Splash Page
@@ -715,6 +932,11 @@ Object dashboard.static_routes.add(String network_id, Object params)
 dashboard.static_routes.delete(String network_id, String sr_id)
 ```
 
+### Switch port schedules
+```javascript
+Array dashboard.switch_port_schedules.list(String network_id)
+```
+
 ### Switch ports
 ```javascript
 // List the switch ports for a switch.
@@ -727,6 +949,12 @@ Object dashboard.switch_ports.get(String serial, Number port_number)
 Object dashboard.switch_ports.update(String serial, Number port_number, Object params)
 ```
 
+### Switch profiles
+```javascript
+// List the switch profiles for your switch template configuration.
+Array dashboard.switch_profiles.list(String organization_id, String config_template_id)
+```
+
 ### Switch settings
 ```javascript
 // Returns the switch network settings.
@@ -736,6 +964,27 @@ Object dashboard.switch_settings.get(String network_id)
 Object dashboard.switch_settings.update(String network_id, Object params)
 ```
 
+### Switch stacks
+```javascript
+// List the switch stacks in a network.
+Array dashboard.switch_stacks.list(String network_id)
+
+// Show a switch stack.
+Object dashboard.switch_stacks.get(String network_id, String switch_stack_id)
+
+// Create a switch stack.
+Object dashboard.switch_stacks.create(String network_id, Object params)
+
+// Add a switch to a stack.
+Object dashboard.switch_stacks.add(String network_id, String switch_stack_id, String serial)
+
+// Remove a switch from a stack.
+Object dashboard.switch_stacks.remove(String network_id, String switch_stack_id, String serial)
+
+// Delete a stack.
+Object dashboard.switch_stacks.delete(String network_id, String switch_stack_id)
+```
+
 ### Syslog servers
 ```javascript
 // List the syslog servers for a network.
@@ -743,6 +992,36 @@ Array dashboard.syslog_servers.list(String network_id)
 
 // Update the syslog servers for a network.
 Array dashboard.syslog_servers.update(String network_id, Array servers)
+```
+
+### Traffic analysis settings
+```javascript
+// Return the traffic analysis settings for a network.
+Object dashboard.traffic_analysis_settings.get(String network_id)
+
+// Update the traffic analysis settings for a network.
+Object dashboard.traffic_analysis_settings.update(String network_id, Object params)
+```
+
+### Traffic Shaping
+```javascript
+// Display the traffic shaping settings for an MX network.
+Object dashboard.traffic_shaping.network_settings.get(String network_id)
+
+// Update the traffic shaping settings for an MX network.
+Object dashboard.traffic_shaping.network_settings.update(String network_id, Object params)
+
+// Display the traffic shaping settings for a SSID on an MR network.
+Object dashboard.traffic_shaping.ssid_settings.get(String network_id, Number ssid)
+
+// Update the traffic shaping settings for an SSID on an MR network.
+Object dashboard.traffic_shaping.ssid_settings.update(String network_id, Number ssid, Object params)
+
+// Returns the available DSCP tagging options for your traffic shaping rules.
+Array dashboard.traffic_shaping.dscpTaggingOptions(String network_id)
+
+// Returns the application categories for traffic shaping rules.
+Array dashboard.traffic_shaping.applicationCategories(String network_id)
 ```
 
 ### Uplink settings
@@ -778,8 +1057,13 @@ Object dashboard.vlans.isEnabled(String network_id)
 Object dashboard.vlans.setEnabled(String network_id, Boolean enabled)
 ```
 
-### Wireless Health
+### Webhook logs
+```javascript
+// Return the log of webhook POSTs sent.
+Array dashboard.webhook_logs.get(String organization_id, Object params)
+```
 
+### Wireless Health
 #### Connectivity Info
 ```javascript
 // Aggregated connectivity info for this network.

@@ -52,6 +52,10 @@ function MerakiDashboard(apiKey) {
     }
   };
 
+  dashboard.api_usage = {
+    api_requests: (organization_id, params) => rest.get(`/organizations/${organization_id}/apiRequests`, params)
+  };
+
   dashboard.admins = {
     list: (organization_id) => rest.get(`/organizations/${organization_id}/admins`),
     create: (organization_id, params) => rest.post(`/organizations/${organization_id}/admins`, params),
@@ -64,12 +68,12 @@ function MerakiDashboard(apiKey) {
     update: (network_id, params) => rest.put(`/networks/${network_id}/alertSettings`, params)
   };
 
-  dashboard.analytics = {
-    overview: (serial) => rest.get(`/devices/${serial}/camera/analytics/overview`),
-    zones: (serial) => rest.get(`/devices/${serial}/camera/analytics/zones`),
-    historicalRecords: (serial, zone_id, params) => rest.get(`/devices/${serial}/camera/analytics/zones/${zone_id}/history`, params),
-    recentRecords: (serial) => rest.get(`/devices/${serial}/camera/analytics/recent`),
-    liveRecords: (serial) => rest.get(`/devices/${serial}/camera/analytics/live`)
+  dashboard.action_batches = {
+    list: (organization_id) => rest.get(`/organizations/${organization_id}/actionBatches`),
+    get: (organization_id, action_batch_id) => rest.get(`/organizations/${organization_id}/actionBatches/${action_batch_id}`),
+    create: (organization_id, params) => rest.post(`/organizations/${organization_id}/actionBatches`, params),
+    update: (organization_id, action_batch_id, params) => rest.put(`/organizations/${organization_id}/actionBatches/${action_batch_id}`, params),
+    delete: (organization_id, action_batch_id) => rest.delete(`/organizations/${organization_id}/actionBatches/${action_batch_id}`)
   };
 
   dashboard.bluetooth_clients = {
@@ -78,7 +82,8 @@ function MerakiDashboard(apiKey) {
   };
 
   dashboard.cameras = {
-    videoLink: (network_id, serial, timestamp) => rest.get(`/networks/${network_id}/cameras/${serial}/videoLink`, ensureValueVerbose(timestamp, { timestamp }, {}))
+    videoLink: (network_id, serial, timestamp) => rest.get(`/networks/${network_id}/cameras/${serial}/videoLink`, ensureValueVerbose(timestamp, { timestamp }, {})),
+    snapshot: (network_id, serial, timestamp) => rest.post(`/networks/${network_id}/cameras/${serial}/snapshot`, ensureValueVerbose(timestamp, { timestamp }, {}))
   };
 
   dashboard.clients = {
@@ -93,7 +98,8 @@ function MerakiDashboard(apiKey) {
     getPolicy: (network_id, client_mac, timespan) => rest.get(`/networks/${network_id}/clients/${client_mac}/policy`, ensureValueVerbose(timespan, { timespan }, {})),
     updatePolicy: (network_id, client_mac, params) => rest.put(`/networks/${network_id}/clients/${client_mac}/policy`, params),
     getSplashAuth: (network_id, client_mac) => rest.get(`/networks/${network_id}/clients/${client_mac}/splashAuthorizationStatus`),
-    updateSplashAuth: (network_id, client_mac, params) => rest.put(`/networks/${network_id}/clients/${client_mac}/splashAuthorizationStatus`, params)
+    updateSplashAuth: (network_id, client_mac, params) => rest.put(`/networks/${network_id}/clients/${client_mac}/splashAuthorizationStatus`, params),
+    usedNetwork: (network_id, params) => rest.get(`/networks/${network_id}/clients`, params)
   };
 
   dashboard.config_templates = {
@@ -112,7 +118,8 @@ function MerakiDashboard(apiKey) {
   };
 
   dashboard.devices = {
-    list: (network_id) => rest.get(`/networks/${network_id}/devices`),
+    listByOrganization: (organization_id, params) => rest.get(`/organizations/${organization_id}/devices`, params),
+    listByNetwork: (network_id) => rest.get(`/networks/${network_id}/devices`),
     get: (network_id, serial) => rest.get(`/networks/${network_id}/devices/${serial}`),
     getUplinkInfo: (network_id, serial) => rest.get(`/networks/${network_id}/devices/${serial}/uplink`),
     update: (network_id, serial, params) => rest.put(`/networks/${network_id}/devices/${serial}`, params),
@@ -120,7 +127,9 @@ function MerakiDashboard(apiKey) {
     remove: (network_id, serial) => rest.post(`/networks/${network_id}/devices/${serial}/remove`),
     lldpCdpInfo: (network_id, serial, timespan) => rest.get(`/networks/${network_id}/devices/${serial}/lldp_cdp`, ensureValueVerbose(timespan, { timespan }, {})),
     lossAndLatencyHistory: (network_id, serial, params) => rest.get(`/networks/${network_id}/devices/${serial}/lossAndLatencyHistory`, params),
-    performanceScore: (network_id, serial) => rest.get(`/networks/${network_id}/devices/${serial}/performance`)
+    performanceScore: (network_id, serial) => rest.get(`/networks/${network_id}/devices/${serial}/performance`),
+    blinkLeds: (network_id, serial, params) => rest.post(`/networks/${network_id}/devices/${serial}/blinkLeds`, params),
+    reboot: (network_id, serial) => rest.post(`/networks/${network_id}/devices/${serial}/reboot`)
   };
 
   dashboard.firewalled_services = {
@@ -130,7 +139,11 @@ function MerakiDashboard(apiKey) {
   };
 
   dashboard.group_policies = {
-    list: (network_id) => rest.get(`/networks/${network_id}/groupPolicies`)
+    list: (network_id) => rest.get(`/networks/${network_id}/groupPolicies`),
+    get: (network_id, group_policy_id) => rest.get(`/networks/${network_id}/groupPolicies/${group_policy_id}`),
+    create: (network_id, params) => rest.post(`/networks/${network_id}/groupPolicies`, params),
+    update: (network_id, group_policy_id, params) => rest.put(`/networks/${network_id}/groupPolicies/${group_policy_id}`, params),
+    delete: (network_id, group_policy_id) => rest.delete(`/networks/${network_id}/groupPolicies/${group_policy_id}`),
   };
 
   dashboard.http_servers = {
@@ -143,6 +156,27 @@ function MerakiDashboard(apiKey) {
     testStatus: (network_id, test_id) => rest.get(`/networks/${network_id}/httpServers/webhookTests/${test_id}`)
   };
 
+  dashboard.intrusion_settings = {
+    organization: {
+      get: (organization_id) => rest.get(`/organizations/${organization_id}/security/intrusionSettings`),
+      update: (organization_id, params) => rest.put(`/organizations/${organization_id}/security/intrusionSettings`, params),
+    },
+    mx_network: {
+      get: (network_id) => rest.get(`/networks/${network_id}/security/intrusionSettings`),
+      update: (network_id, params) => rest.put(`/networks/${network_id}/security/intrusionSettings`, params),
+    },
+  };
+
+  dashboard.malware_settings = {
+    get: (network_id) => rest.get(`/networks/${network_id}/security/malwareSettings`),
+    update: (network_id, params) => rest.put(`/networks/${network_id}/security/malwareSettings`, params)
+  };
+
+  dashboard.management_settings = {
+    get: (network_id, serial) => rest.get(`/networks/${network_id}/devices/${serial}/managementInterfaceSettings`),
+    update: (network_id, serial, params) => rest.put(`/networks/${network_id}/devices/${serial}/managementInterfaceSettings`, params)
+  };
+
   dashboard.meraki_auth = {
     listUsers: (network_id) => rest.get(`/networks/${network_id}/merakiAuthUsers`),
     getUser: (network_id, user_id) => rest.get(`/networks/${network_id}/merakiAuthUsers/${user_id}`)
@@ -153,9 +187,37 @@ function MerakiDashboard(apiKey) {
     updateRules: (network_id, ssid, params) => rest.put(`/networks/${network_id}/ssids/${ssid}/l3FirewallRules`, params)
   };
 
+  dashboard.mv_sense = {
+    overview: (serial) => rest.get(`/devices/${serial}/camera/analytics/overview`),
+    zones: (serial) => rest.get(`/devices/${serial}/camera/analytics/zones`),
+    historicalRecords: (serial, zone_id, params) => rest.get(`/devices/${serial}/camera/analytics/zones/${zone_id}/history`, params),
+    recentRecords: (serial) => rest.get(`/devices/${serial}/camera/analytics/recent`),
+    liveRecords: (serial) => rest.get(`/devices/${serial}/camera/analytics/live`)
+  };
+
+  dashboard.mx_nat_rules = {
+    one_to_one: {
+      get: (network_id) => rest.get(`/networks/${network_id}/oneToOneNatRules`),
+      update: (network_id, params) => rest.put(`/networks/${network_id}/oneToOneNatRules`, params),
+    },
+    one_to_many: {
+      get: (network_id) => rest.get(`/networks/${network_id}/oneToManyNatRules`),
+      update: (network_id, params) => rest.put(`/networks/${network_id}/oneToManyNatRules`, params),
+    },
+  };
+
   dashboard.mx_l3_firewall = {
     getRules: (network_id) => rest.get(`/networks/${network_id}/l3FirewallRules`),
     updateRules: (network_id, params) => rest.put(`/networks/${network_id}/l3FirewallRules`, params)
+  };
+
+  dashboard.mx_l7_app_categories = {
+    list: (network_id) => rest.get(`/networks/${network_id}/l7FirewallRules/applicationCategories`)
+  };
+
+  dashboard.mx_l7_firewall = {
+    getRules: (network_id) => rest.get(`/networks/${network_id}/l7FirewallRules`),
+    updateRules: (network_id, params) => rest.put(`/networks/${network_id}/l7FirewallRules`, params)
   };
 
   dashboard.mx_vpn_firewall = {
@@ -168,12 +230,22 @@ function MerakiDashboard(apiKey) {
     updateRules: (network_id, params) => rest.put(`/networks/${network_id}/cellularFirewallRules`, params),
   };
 
+  dashboard.mx_port_forwarding = {
+    getRules: (network_id) => rest.get(`/networks/${network_id}/portForwardingRules`),
+    updateRules: (network_id, params) => rest.put(`/networks/${network_id}/portForwardingRules`, params)
+  };
+
   dashboard.named_tag_scope = {
-    list: (network_id, with_details) => rest.get(`/networks/${network_id}/sm/namedTagScopes`, ensureValueVerbose(with_details, { withDetails: with_details }, {})),
-    get: (network_id, named_tag_scope_id, with_details) => rest.get(`/networks/${network_id}/sm/namedTagScopes/${named_tag_scope_id}`, ensureValueVerbose(with_details, { withDetails: with_details }, {})),
-    update: (network_id, named_tag_scope_id, params) => rest.put(`/networks/${network_id}/sm/namedTagScopes/${named_tag_scope_id}`, params),
-    create: (network_id, params) => rest.post(`/networks/${network_id}/sm/namedTagScopes`, params),
-    delete: (network_id, named_tag_scope_id) => rest.delete(`/networks/${network_id}/sm/namedTagScopes/${named_tag_scope_id}`)
+    list: (network_id, with_details) => rest.get(`/networks/${network_id}/sm/targetGroups`, ensureValueVerbose(with_details, { withDetails: with_details }, {})),
+    get: (network_id, named_tag_scope_id, with_details) => rest.get(`/networks/${network_id}/sm/targetGroups/${named_tag_scope_id}`, ensureValueVerbose(with_details, { withDetails: with_details }, {})),
+    update: (network_id, named_tag_scope_id, params) => rest.put(`/networks/${network_id}/sm/targetGroups/${named_tag_scope_id}`, params),
+    create: (network_id, params) => rest.post(`/networks/${network_id}/sm/targetGroups`, params),
+    delete: (network_id, named_tag_scope_id) => rest.delete(`/networks/${network_id}/sm/targetGroups/${named_tag_scope_id}`)
+  };
+
+  dashboard.netflow_settings = {
+    get: (network_id) => rest.get(`/networks/${network_id}/netflowSettings`),
+    update: (network_id, params) => rest.put(`/networks/${network_id}/netflowSettings`, params)
   };
 
   dashboard.networks = {
@@ -191,13 +263,20 @@ function MerakiDashboard(apiKey) {
     listAirMarshalScanResults: (network_id, timespan) => rest.get(`/networks/${network_id}/airMarshal`, ensureValueVerbose(timespan, { timespan }, {})),
     getBluetoothSettings: (network_id) => rest.get(`/networks/${network_id}/bluetoothSettings`),
     updateBluetoothSettings: (network_id, params) => rest.put(`/networks/${network_id}/bluetoothSettings`, params),
+    combineNetworks: (organization_id, params) => rest.post(`/organizations/${organization_id}/networks/combine`, params),
+    splitNetwork: (network_id) => rest.post(`/networks/${network_id}/split`)
+  };
+
+  dashboard.openapi_spec = {
+    get: (organization_id) => rest.get(`/organizations/${organization_id}/openapiSpec`)
   };
 
   dashboard.organizations = {
     list: () => rest.get(`/organizations`),
     get: (organization_id) => rest.get(`/organizations/${organization_id}`),
-    update: (organization_id, params) => rest.put(`/organizations/${organization_id}`, params),
     create: (params) => rest.post(`/organizations`, params),
+    update: (organization_id, params) => rest.put(`/organizations/${organization_id}`, params),
+    delete: (organization_id) => rest.delete(`/organizations/${organization_id}`),
     clone: (organization_id, params) => rest.post(`/organizations/${organization_id}/clone`, params),
     claimDevice: (organization_id, params) => rest.post(`/organizations/${organization_id}/claim`, params),
     getLicenseState: (organization_id) => rest.get(`/organizations/${organization_id}/licenseState`),
@@ -205,6 +284,7 @@ function MerakiDashboard(apiKey) {
     getDeviceStatuses: (organization_id) => rest.get(`/organizations/${organization_id}/deviceStatuses`),
     getSnmpSettings: (organization_id) => rest.get(`/organizations/${organization_id}/snmp`),
     updateSnmpSettings: (organization_id, params) => rest.put(`/organizations/${organization_id}/snmp`, params),
+    getUplinkLossLatency: (organization_id, params) => rest.get(`/organizations/${organization_id}/uplinksLossAndLatency`, params),
     getThirdPartyVpnPeers: (organization_id) => rest.get(`/organizations/${organization_id}/thirdPartyVPNPeers`),
     updateThirdPartyVpnPeers: (organization_id, params) => rest.put(`/organizations/${organization_id}/thirdPartyVPNPeers`, params)
   };
@@ -310,7 +390,8 @@ function MerakiDashboard(apiKey) {
       performanceHistory: (network_id, device_id, params) => rest.get(`/networks/${network_id}/sm/${device_id}/performanceHistory`, params),
       desktopLogs: (network_id, device_id, params) => rest.get(`/networks/${network_id}/sm/${device_id}/desktopLogs`, params),
       commandLogs: (network_id, device_id, params) => rest.get(`/networks/${network_id}/sm/${device_id}/deviceCommandLogs`, params),
-      connectivityHistory: (network_id, device_id, params) => rest.get(`/networks/${network_id}/sm/${device_id}/connectivity`, params)
+      connectivityHistory: (network_id, device_id, params) => rest.get(`/networks/${network_id}/sm/${device_id}/connectivity`, params),
+      unenroll: (network_id, device_id) => rest.post(`/networks/${network_id}/sm/devices/${device_id}/unenroll`)
     },
     listDevices: (network_id) => rest.get(`/networks/${network_id}/sm/devices`),
     listOwners: (network_id, params) => rest.get(`/networks/${network_id}/sm/users`, params),
@@ -324,13 +405,31 @@ function MerakiDashboard(apiKey) {
     wipeDevice: (network_id, params) => rest.put(`/networks/${network_id}/sm/device/wipe`, params),
     forceCheckInDevices: (network_id, params) => rest.put(`/networks/${network_id}/sm/devices/checkin`, params),
     moveDevices: (network_id, params) => rest.put(`/networks/${network_id}/sm/devices/move`, params),
-    listProfiles: (network_id) => rest.get(`/networks/${network_id}/sm/profiles`)
+    listProfiles: (network_id) => rest.get(`/networks/${network_id}/sm/profiles`),
+    bypassLockAttempt: (network_id, ids) => rest.post(`/networks/${network_id}/sm/bypassActivationLockAttempts`, ensureValueVerbose(ids, { ids }, {})),
+    bypassLockAttemptStatus: (network_id, attempt_id) => rest.get(`/networks/${network_id}/sm/bypassActivationLockAttempts/${attempt_id}`)
+  };
+
+  dashboard.radio_settings = {
+    get: (network_id, serial) => rest.get(`/networks/${network_id}/devices/${serial}/wireless/radioSettings`),
+    update: (network_id, serial, params) => rest.put(`/networks/${network_id}/devices/${serial}/wireless/radioSettings`, params),
+    listRfProfiles: (network_id, params) => rest.get(`/networks/${network_id}/wireless/rfProfiles`, params)
+  };
+
+  dashboard.snmp_settings = {
+    get: (network_id) => rest.get(`/networks/${network_id}/snmpSettings`),
+    update: (network_id, params) => rest.put(`/networks/${network_id}/snmpSettings`, params)
   };
 
   dashboard.ssids = {
     list: (network_id) => rest.get(`/networks/${network_id}/ssids`),
     get: (network_id, ssid) => rest.get(`/networks/${network_id}/ssids/${ssid}`),
     update: (network_id, ssid, params) => rest.put(`/networks/${network_id}/ssids/${ssid}`, params)
+  };
+
+  dashboard.security_events = {
+    byOrganization: (organization_id, params) => rest.get(`/organizations/${organization_id}/securityEvents`, params),
+    byNetwork: (network_id, params) => rest.get(`/networks/${network_id}/securityEvents`, params)
   };
 
   dashboard.splash_page = {
@@ -347,10 +446,18 @@ function MerakiDashboard(apiKey) {
     delete: (network_id, sr_id) => rest.delete(`/networks/${network_id}/staticRoutes/${sr_id}`)
   };
 
+  dashboard.switch_port_schedules = {
+    list: (network_id) => rest.get(`/networks/${network_id}/switch/portSchedules`)
+  };
+
   dashboard.switch_ports = {
     list: (serial) => rest.get(`/devices/${serial}/switchPorts`),
     get: (serial, port_number) => rest.get(`/devices/${serial}/switchPorts/${port_number}`),
     update: (serial, port_number, params) => rest.put(`/devices/${serial}/switchPorts/${port_number}`, params)
+  };
+
+  dashboard.switch_profiles = {
+    list: (organization_id, config_template_id) => rest.get(`/organizations/${organization_id}/configTemplates/${config_template_id}/switchProfiles`)
   };
 
   dashboard.switch_settings = {
@@ -358,9 +465,36 @@ function MerakiDashboard(apiKey) {
     update: (network_id, params) => rest.put(`/networks/${network_id}/switch/settings`, params)
   };
 
+  dashboard.switch_stacks = {
+    list: (network_id) => rest.get(`/networks/${network_id}/switchStacks`),
+    get: (network_id, switch_stack_id) => rest.get(`/networks/${network_id}/switchStacks/${switch_stack_id}`),
+    create: (network_id, params) => rest.post(`/networks/${network_id}/switchStacks`, params),
+    add: (network_id, switch_stack_id, serial) => rest.post(`/networks/${network_id}/switchStacks/${switch_stack_id}/add`, ensureValueVerbose(serial, { serial }, {})),
+    remove: (network_id, switch_stack_id, serial) => rest.post(`/networks/${network_id}/switchStacks/${switch_stack_id}/remove`, ensureValueVerbose(serial, { serial }, {})),
+    delete: (network_id, switch_stack_id) => rest.delete(`/networks/${network_id}/switchStacks/${switch_stack_id}`)
+  };
+
   dashboard.syslog_servers = {
     list: (network_id) => rest.get(`/networks/${network_id}/syslogServers`),
     update: (network_id, servers) => rest.put(`/networks/${network_id}/syslogServers`, ensureValueVerbose(servers, { servers }, {}))
+  };
+
+  dashboard.traffic_analysis_settings = {
+    get: (network_id) => rest.get(`/networks/${network_id}/trafficAnalysisSettings`),
+    update: (network_id, params) => rest.put(`/networks/${network_id}/trafficAnalysisSettings`, params)
+  };
+
+  dashboard.traffic_shaping = {
+    network_settings: {
+      get: (network_id) => rest.get(`/networks/${network_id}/trafficShaping`),
+      update: (network_id, params) => rest.put(`/networks/${network_id}/trafficShaping`, params),
+    },
+    ssid_settings: {
+      get: (network_id, ssid) => rest.get(`/networks/${network_id}/ssids/${ssid}/trafficShaping`),
+      update: (network_id, ssid, params) => rest.put(`/networks/${network_id}/ssids/${ssid}/trafficShaping`, params),
+    },
+    dscpTaggingOptions: (network_id) => rest.get(`/networks/${network_id}/trafficShaping/dscpTaggingOptions`),
+    applicationCategories: (network_id) => rest.get(`/networks/${network_id}/trafficShaping/applicationCategories`)
   };
 
   dashboard.uplink_settings = {
@@ -376,6 +510,10 @@ function MerakiDashboard(apiKey) {
     delete: (network_id, vlan_id) => rest.delete(`/networks/${network_id}/vlans/${vlan_id}`),
     isEnabled: (network_id) => rest.get(`/networks/${network_id}/vlansEnabledState`),
     setEnabled: (network_id, enabled) => rest.put(`/networks/${network_id}/vlansEnabledState`, ensureValueVerbose(enabled, { enabled }, {})),
+  };
+
+  dashboard.webhook_logs = {
+    get: (organization_id, params) => rest.get(`/organizations/${organization_id}/webhookLogs`, params)
   };
 
   dashboard.wireless_health = {

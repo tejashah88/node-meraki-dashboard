@@ -21,7 +21,7 @@ describe('utils/retrieve-api-routes.js', function () {
   });
 
   describe('testing structure of retrieved resources', function () {
-    const OFFICIAL_DOC_PARAMS = [ 'group', 'path', 'method', 'description', 'alt_path', 'params' ];
+    const OFFICIAL_DOC_PARAMS = [ 'group', 'path', 'has_params', 'method', 'description', 'alt_path', 'params' ];
 
     before('retrieving API endpoint resources', function () {
       const flatten = arr => [].concat(...arr);

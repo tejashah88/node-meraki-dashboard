@@ -1,6 +1,25 @@
 # Changelog
 
-## v2.1.0 - (NEXT)
+## v3.0.0 - (Aug/7/2019)
+
+### :warning: Breaking Changes :warning:
+
+#### API Coverage Tool Changes
+The postman docs that are used to fetch additional endpoints are being dropped in favor of exclusively using the official docs. The postman docs required more maintainance due to inconsistencies in formatting and they took a long time to fetch from the network (10 seconds!). Additionally, the blacklist is being dropped since it's original purpose was to account for odd postman endpoints that weren't properly filtered by the tool.
+
+#### Upgrading to v3.0.0
+* All endpoints in the 'Analytics' have been moved to 'MV Sense'
+  * i.e. change `dashboard.analytics` to `dashboard.mv_sense`
+* `dashboard.devices.list` used to list devices by network, and is now changed to `dashboard.devices.listByNetwork`
+
+### New API Endpoints
+* Added approximately 70 new endpoints
+
+## v2.1.1 - (Feb/1/2019)
+### Bug fixes
+* [#7](https://github.com/tejashah88/node-meraki-dashboard/issues/7): Fixed being unable to import the library
+
+## v2.1.0 - (Jan/29/2019)
 
 ### New API Endpoints
 #### New groups added
