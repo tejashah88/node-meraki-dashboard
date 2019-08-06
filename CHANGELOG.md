@@ -80,7 +80,7 @@
   * Get security events - `dashboard.clients.securityEvents`
 
 ### Bug fixes
-* [#4](https://github.com/tejashah88/node-meraki-dashboard/issues/4): Fixed a bug where org IDs longer than 16 digits would have their trailing digits be set to zero upon being parsed to JSON. This was due to how javascript handles integers larger than (2<sup>53</sup> - 1)
+* [#4](https://github.com/tejashah88/node-meraki-dashboard/issues/4): Fixed a bug where organization IDs longer than 16 digits would have their trailing digits be set to zero upon being parsed to JSON. This was due to how javascript handles integers larger than (2<sup>53</sup> - 1)
 
 ## v1.1.0 - (May/9/2018)
 
