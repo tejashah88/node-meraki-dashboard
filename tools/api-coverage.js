@@ -31,10 +31,11 @@ retrieveOfficialDocs()
   .then(rawEndpoints => rawEndpoints.filter(endpoint => !implEndpoints.includes(strEndpoint(endpoint))))
   .then(endpointData => {
     const coloredEndpointData = endpointData.map(
-      ({ group, method, path }) => ([
+      ({ group, method, path, description }) => ([
         group,
         METHOD_COLORS[method](method),
-        path.replace(/<param>/g, chalk.cyanBright('<param>'))
+        path.replace(/<param>/g, chalk.cyanBright('<param>')),
+        description.endsWith('.') ? description : description + '.'
       ])
     );
 
@@ -47,7 +48,7 @@ retrieveOfficialDocs()
         return a[0].localeCompare(b[0]);
       });
 
-      const columnTitles = [ 'group', 'method', 'path'];
+      const columnTitles = [ 'group', 'method', 'path', 'description'];
       results = `# of potentially unimplemented endpoints: ${endpointData.length}\n`;
       results += table([columnTitles, ...coloredEndpointData]);
     }

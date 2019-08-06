@@ -32,6 +32,7 @@ describe('utils/retrieve-api-routes.js', function () {
     context('official documentation', function () {
       it(`should have the following fields: [${OFFICIAL_DOC_PARAMS.join(', ')}]`, function () {
         return Promise.all([
+          expect(this.pOfficialEndpoints).to.eventually.be.fulfilled,
           expect(this.pOfficialEndpoints).to.eventually.be.an('array'),
           expect(this.pOfficialEndpoints).to.eventually.all.have.keys(OFFICIAL_DOC_PARAMS)
         ]);
