@@ -3,7 +3,7 @@
 const fs = require('fs');
 const matchAll = require('string.prototype.matchall');
 
-function getImplementedPaths(srcPath) {
+function getImplementedEndpoints(srcPath) {
   const code = fs.readFileSync(srcPath, 'utf-8');
   const rawMatches = [...matchAll(code, /\.(\w+)\(`(.+)`(, (.+))?\)/g)];
   const finalPaths = rawMatches.map(match => ({
@@ -14,4 +14,4 @@ function getImplementedPaths(srcPath) {
   return finalPaths;
 }
 
-module.exports = getImplementedPaths;
+module.exports = { getImplementedEndpoints };

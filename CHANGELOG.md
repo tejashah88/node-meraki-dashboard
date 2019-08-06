@@ -36,24 +36,6 @@
 ### New API Endpoints
 * Added approximately 60 new endpoints
 
-#### New groups added
-* Alert Settings - `dashboard.alert_settings`
-* Analytics - `dashboard.analytics`
-* Cameras - `dashboard.cameras`
-* HTTP Servers - `dashboard.http_servers`
-* Wireless Health - `dashboard.wireless_health`
-* Splash Page - `dashboard.splash_page`
-* Named tag scope - `dashboard.named_tag_scope`
-* Syslog servers - `dashboard.syslog_servers`
-* Phone announcements - `dashboard.phone_announcements`
-* Firewalled services - `dashboard.firewalled_services`
-
-#### New endpoints in existing groups
-* Clients - `dashboard.clients`
-* SM - `dashboard.sm`
-* VLANs - `dashboard.vlans`
-* Devices - `dashboard.devices`
-
 ### Bug fixes
 * Fixed not being able to retrieve the events from a client
 * Fixed not being able to retrieve the security events endpoint
@@ -91,7 +73,7 @@
 ## v1.0.1 - (May/2/2018)
 
 ### New API Endpoints
-* Added new endpoint to get device statuses from an org - `dashboard.organizations.getDeviceStatuses`
+* Added new endpoint to get device statuses from an organization - `dashboard.organizations.getDeviceStatuses`
 
 ### Bug Fixes
 * Fixed not being able to update an admin's attributes

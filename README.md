@@ -5,15 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/tejashah88/node-meraki-dashboard/badge.svg)](https://coveralls.io/github/tejashah88/node-meraki-dashboard)
 [![dependencies Status](https://david-dm.org/tejashah88/node-meraki-dashboard/status.svg)](https://david-dm.org/tejashah88/node-meraki-dashboard)
 
-A modern node.js client library for using the Meraki Dashboard API. Supports a minimum of node v6+.
-
-### :warning: **Announcement - December 22nd, 2018** :warning:
-I've been noticing that Meraki has added a significant amount of new endpoints over the course of 6 months (about 75 since the last release of this library). This has made it difficult to keep up with the recent additions and track which changes they've made, and their changelogs don't appear to tell the entire story.
-
-To ensure the longevity of this library, I've make a few significant (non-breaking) updates to how this library will work.
-
-1. I've added some new functions in v2.0.0 that allow you to make custom API calls for any endpoints that haven't been implemented, which will be under the `dashboard.custom` section. This should help when there's newly released endpoints that haven't been implemented yet.
-2. I've started to add basic unit testing of the library as well as an experimental API coverage tool that reports which endpoints are covered by this library. This tool will pull all documented endpoints from the official docs and the Postman collection, compare it with endpoints that are implemented, and output which endpoints need to be implemented. This is separate from the integrated code coverage, and as such, will not be part of the rest of the tests.
+A modern node.js client library for using the Meraki Dashboard API. Supports a minimum of node v6.
 
 ## Documentation
 
@@ -62,17 +54,12 @@ npm install
 npm test
 ```
 
-### Running the API coverage tool
+### API coverage tool
 
-**Disclaimer**: You should take any unimplemented endpoints coming from Postman with a grain of salt, as some parts of it aren't as consistent as the official docs. This can make the API coverage tool report false endpoints that are actually implemented but are invalid due to how the Postman collection is defined.
+The API coverage tool is used for reporting endpoints that are not implemented by this library. It fetches the endpoints from the official documentation and checks against the current codebase and finally generates a fancy table of the missing endpoints needed.
 
-With that being said, there is a blacklist that can be used to filter those false endpoints, which you can use and generate with passing a few arguments below.
+#### Usage
 
 ```bash
-npm run api-coverage -- --disable-blacklist --save-blacklist
+npm run api-coverage
 ```
-
-* `disable-blacklist` - disables reading from the blacklist
-* `save-blacklist` - saves or overwrites the current blacklist with the current analysis **(current blacklist will be overridden!)**
-
-You can omit either or both arguments to suite your needs.

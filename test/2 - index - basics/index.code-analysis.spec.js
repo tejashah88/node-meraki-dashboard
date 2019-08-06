@@ -3,14 +3,14 @@
 const matchAll = require('string.prototype.matchall');
 
 const expect = require('chai').expect;
-const getImplementedPaths = require('../../utils/code-analyzer');
+const { getImplementedEndpoints } = require('../../utils/code-analyzer');
 const DEFINED_API_METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
 
 const unique = arr => [...new Set(arr)];
 
 describe('code structure analysis tests', function () {
   before(function () {
-    this.apiPaths = getImplementedPaths('./src/index.js');
+    this.apiPaths = getImplementedEndpoints('./src/index.js');
   });
 
   it('should have valid REST methods implemented', function () {

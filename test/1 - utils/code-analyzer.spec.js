@@ -1,11 +1,11 @@
 'use strict';
 
 const expect = require('chai').expect;
-const getImplementedPaths = require('../../utils/code-analyzer');
+const { getImplementedEndpoints } = require('../../utils/code-analyzer');
 
 describe('utils/code-analyzer.js', function () {
   before(function () {
-    this.apiPaths = getImplementedPaths('./src/index.js');
+    this.apiPaths = getImplementedEndpoints('./src/index.js');
   });
 
   it('should have a defined method and path', function () {
