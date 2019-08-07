@@ -1,6 +1,6 @@
 {
   "name": "node-meraki-dashboard",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "A modern node.js client library for using the Meraki Dashboard API.",
   "main": "src/index.js",
   "scripts": {
