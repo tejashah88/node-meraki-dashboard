@@ -43,7 +43,7 @@
     "coveralls": "^3.0.5",
     "eslint": "^6.1.0",
     "json-from-text": "^1.1.0",
-    "mocha": "^6.2.0",
+    "mocha": "^10.2.0",
     "nyc": "^14.1.1",
     "object.values": "^1.1.0",
     "string.prototype.matchall": "^3.0.1",
